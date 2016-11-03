@@ -1,0 +1,25 @@
+<div class="container">
+
+  <table class="table table-striped table-hover">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Tenant</th>
+      <th>Roles</th>
+    </tr>
+    </thead>
+    <tr ng-repeat="user in users">
+      <td>{{user.username}}</td>
+      <td>{{user.tenant.name}}</td>
+      <td>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="role in user.roles">{{role.name}}</li>
+        </ul>
+      </td>
+    </tr>
+
+  </table>
+
+
+  <span class="glyphicon glyphicon-plus" aria-hidden="true" ng-click="openadduser()"></span>
+</div>

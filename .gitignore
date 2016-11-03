@@ -1,0 +1,11 @@
+*/.editorconfig
+**/.gitattributes
+**/.idea/**
+**/*.class
+**/*.classpath
+**/*.setting*
+**/bin/**
+**/.gradle/**
+**/.project
+**/bower_components/**
+**/node_modules/**

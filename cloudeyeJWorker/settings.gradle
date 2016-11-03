@@ -1,0 +1,3 @@
+include ':cloudeyecore'
+
+project(':cloudeyecore').projectDir= new File(settingsDir, '../cloudeyecore')
