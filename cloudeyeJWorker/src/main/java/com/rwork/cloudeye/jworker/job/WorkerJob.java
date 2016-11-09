@@ -58,24 +58,29 @@ public class WorkerJob {
 						ch.setSuccess(false);
 						ch.setOutput(output);
 					}
+					
 					if(output!= null && output.contains(ch.getCommand().getContainString())){
 						ch.setSuccess(true);
-						commandhostDao.updateCommandHost(ch);
-						
-						CommandRunHistory history= new CommandRunHistory();
-						history.setCommandid(ch.getCommand().getId());
-						history.setCommandoutput(output);
-						history.setCommandstring(ch.getCommand().getCommandstring());
-						history.setExpectedoutputcontains(ch.getCommand().getExpectedOutput());
-						history.setHostid(ch.getHost().getId());
-						history.setHostname(ch.getHost().getHostname());
-						//history.setOwnerid(ch.getCommand().getOwner().getId());
-						//history.setOwnername(ch.getCommand().getOwner().getName());
-						history.setRunDate(new Date());
-						history.setSuccess(ch.getSuccess());
-						//history.setTenantid(ch.getHost());
-						commandrunHistoryRepo.save(history);
 					}
+					else{
+						ch.setSuccess(false);
+					}
+					commandhostDao.updateCommandHost(ch);
+					
+					CommandRunHistory history= new CommandRunHistory();
+					history.setCommandid(ch.getCommand().getId());
+					history.setCommandoutput(output);
+					history.setCommandstring(ch.getCommand().getCommandstring());
+					history.setExpectedoutputcontains(ch.getCommand().getExpectedOutput());
+					history.setHostid(ch.getHost().getId());
+					history.setHostname(ch.getHost().getHostname());
+					//history.setOwnerid(ch.getCommand().getOwner().getId());
+					//history.setOwnername(ch.getCommand().getOwner().getName());
+					history.setRunDate(new Date());
+					history.setSuccess(ch.getSuccess());
+					//history.setTenantid(ch.getHost());
+					commandrunHistoryRepo.save(history);
+					
 					ch.setCommandStatus(CommandStatus.QUEUED);
 					commandhostDao.updateCommandHost(ch);
 				}

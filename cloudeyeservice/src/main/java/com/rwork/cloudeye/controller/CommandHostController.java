@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +23,7 @@ import com.rwork.cloudeye.runner.SSHRunner;
 import com.rwork.cloudeye.service.WorkerNodeService;
 
 @RestController
+@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
 public class CommandHostController {
 	
 	@Autowired
@@ -64,6 +66,13 @@ public class CommandHostController {
 		return commandhostdao.findById(id);
 	}
 	
+	@RequestMapping(path="/commandhost/{id}",method=RequestMethod.DELETE)
+	public ResponseEntity<?> deleteCommand(@PathVariable Long id){
+		
+		commandhostdao.deleteById(id);
+		return new ResponseEntity(HttpStatus.OK);
+	}
+	  
 	@RequestMapping(path="/commandhost/{id}/run",method=RequestMethod.PUT)
 	public ResponseEntity<?> runCommandOnHost(@PathVariable long id){
 		CommandHost ch= commandhostdao.findById(id);

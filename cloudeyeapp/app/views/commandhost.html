@@ -4,21 +4,29 @@
 
         <thead>
         <tr>
+            <th>Id</th>
             <th>Host</th>
             <th>Hostname & IPv4</th>
             <th>Command</th>
             <th>Output Should Contain</th>
             <th>Status</th>
-            <th>Success</th>
+            <th>Last Success</th>
+            <th>Actions</th>
         </tr>
         </thead>
-        <tr ng-repeat="ch in commandhosts">
+        <tr ng-repeat="ch in commandhosts"  ng-class="{'warning': ch.success==false, 'success':ch.success==true}">
+            <td>{{ch.id}}</td>
             <td>{{ ch.host.name }}</td>
             <td>{{ ch.host.hostname }} , {{ch.host.hostipaddress}}</td>
             <td>{{ ch.command.commandstring }}</td>
             <td> {{ch.command.containString }}</td>
             <td> {{ch.commandStatus}} </td>
             <td> {{ch.success}}</td>
+            <td>
+                <span class="glyphicon glyphicon-remove" ng-click="delete(ch.id)">
+                <span class="glyphicon glyphicon-refresh" ng-click="reset(ch.id)">
+                <span class="glyphicon glyphicon-play" ng-click="run(ch.id)">
+            </td>
         </tr>
     </table>
 

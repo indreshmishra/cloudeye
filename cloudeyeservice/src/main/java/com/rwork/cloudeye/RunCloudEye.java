@@ -58,7 +58,7 @@ public class RunCloudEye {
 class WebConfig extends WebMvcConfigurerAdapter{
 	
 	public void addCorsMappings(CorsRegistry registry){
-		registry.addMapping("/**");
+		registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*");
 	}
 	
 	@Autowired
@@ -137,6 +137,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		web.ignoring().antMatchers("/about");
 		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/auth/check");
 		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/command/**");
+		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/commandhost/**");
 		web.ignoring().antMatchers(HttpMethod.OPTIONS, "**");
 		
 	}
@@ -156,6 +157,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		.antMatchers("/user/**").hasAuthority("ADMIN")
 		.antMatchers("/role/**").hasAuthority("ADMIN")
 		.antMatchers("/workernode/**").hasAuthority("ADMIN")
+		.antMatchers(HttpMethod.OPTIONS).permitAll()
 		.anyRequest().permitAll()
 		.and()
 		.httpBasic().realmName("OAuth Server").and()

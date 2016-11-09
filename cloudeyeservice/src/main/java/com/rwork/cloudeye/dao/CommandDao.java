@@ -32,5 +32,11 @@ public class CommandDao {
 	{
 		return entityManager.find(Command.class, id);
 	}
+	
+	public void deleteById(long id){
+		Command c= entityManager.find(Command.class, id);
+		
+		entityManager.remove(c);
+	}
 
 }

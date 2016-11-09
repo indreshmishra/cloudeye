@@ -54,6 +54,13 @@ public class CommandController {
 		return new ResponseEntity(HttpStatus.CREATED);
 	}
 	
+	@RequestMapping(path="/command/{id}",method=RequestMethod.DELETE)
+	public ResponseEntity<?> deleteCommand(@PathVariable Long id){
+		
+		commandDao.deleteById(id);
+		return new ResponseEntity(HttpStatus.OK);
+	}
+	
 	
 
 }

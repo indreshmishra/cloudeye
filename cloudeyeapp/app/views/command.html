@@ -4,18 +4,21 @@
 
     <thead>
     <tr>
+      <th>Id</th>
       <th>Name</th>
       <th>Command</th>
       <th>Output Should Contain</th>
       <th>Last Run Date</th>
+      <th>Actions</th>
     </tr>
     </thead>
     <tr ng-repeat="command in commands">
+      <td>{{command.id}}</td>
       <td>{{ command.name }}</td>
       <td>{{ command.commandstring }}</td>
       <td>{{ command.containString }}</td>
       <td> {{command.lastRunDate }}</td>
-
+      <td> <span class="glyphicon glyphicon-remove" ng-click="delete(command.id)"></td>
     </tr>
   </table>
 

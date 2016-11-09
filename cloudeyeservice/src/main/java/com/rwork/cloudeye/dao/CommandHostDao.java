@@ -29,6 +29,13 @@ public class CommandHostDao {
 		entityManager.remove(commandHost);
 	}
 	
+	public void deleteById(long id){
+		CommandHost ch= entityManager.find(CommandHost.class, id);
+		if(ch!=null){
+			entityManager.remove(ch);
+		}
+	}
+	
 	public List<?> getAll(){
 		return entityManager.createQuery("from CommandHost").getResultList();
 	}

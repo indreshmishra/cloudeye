@@ -9,4 +9,17 @@ angular.module('cloudeyeappApp')
       .success(function(response){
         $scope.commands= response;
       });
+
+
+      $scope.delete=function(id){
+      console.log("deleting command with id "+id);
+      $http.delete('http://localhost:8080/command/'+id ,{headers:{ 'Authorization': 'Basic '+$cookieStore.get('globals').currentUser.authdata}}).success(function(data,status){
+        console.log('command with id '+id+'is deleted now');
+        $http.get('http://localhost:8080/command/',{headers:{ 'Authorization': 'Basic '+$cookieStore.get('globals').currentUser.authdata}})
+              .success(function(response){
+                $scope.commands= response;
+              });
+
+      });
+      };
  });

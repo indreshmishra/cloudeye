@@ -20,3 +20,24 @@
     </table>
 
 </div>
+<div class="container">
+    <form class="form-inline" ng-hide="false" ng-submit="newhost()">
+
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="hostname" ng-model="host.hostname"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="ipv4" ng-model="host.hostipaddress"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="host user" ng-model="host.hostuser"/>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="host password" ng-model="host.hostpassword"/>
+        </div>
+
+        <button type="submit" class="btn btn-default" >Create</button>
+    </form>
+
+    <p> {{ errormessage }}</p>
+</div>
