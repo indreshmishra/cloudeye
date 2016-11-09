@@ -1,0 +1,25 @@
+<div class="container">
+
+    <table class="table table-striped table-hover">
+
+        <thead>
+        <tr>
+            <th>Host</th>
+            <th>Hostname & IPv4</th>
+            <th>Command</th>
+            <th>Output Should Contain</th>
+            <th>Status</th>
+            <th>Success</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="ch in commandhosts">
+            <td>{{ ch.host.name }}</td>
+            <td>{{ ch.host.hostname }} , {{ch.host.hostipaddress}}</td>
+            <td>{{ ch.command.commandstring }}</td>
+            <td> {{ch.command.containString }}</td>
+            <td> {{ch.commandStatus}} </td>
+            <td> {{ch.success}}</td>
+        </tr>
+    </table>
+
+</div>

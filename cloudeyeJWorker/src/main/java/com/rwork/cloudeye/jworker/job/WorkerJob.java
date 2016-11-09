@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.rwork.cloudeye.jworker.dao.CommandHostDao;
@@ -26,10 +27,14 @@ public class WorkerJob {
 	
 	@Autowired
 	private CommandRunHistoryRepository commandrunHistoryRepo;
+	
+	@Autowired
+	private Environment env;
 
 	public void pickupCommandHosts(String workerid, ThreadPoolExecutor jobexecutor){
 		System.out.println("Picking up All queued command host");
 		List<CommandHost> listofcommandhosts = commandhostDao.getAllQueueCommandsToRun(workerid);
+		int maxlength= Integer.parseInt(env.getProperty("command.output.maxlength"));
 		for(CommandHost ch: listofcommandhosts){
 			jobexecutor.execute(new Runnable() {
 				
@@ -40,7 +45,9 @@ public class WorkerJob {
 					commandhostDao.updateCommandHost(ch);
 					try {
 						 output = sshrunner.runCommand(ch.getHost().getHostipaddress(), ch.getCommand().getCommandstring(), ch.getHost().getHostuser(), ch.getHost().getHostpassword());
-						 ch.setOutput(output);
+						 int m = (output.length() < maxlength)? output.length(): maxlength;
+						 String output2=output.substring(0,m);
+						 ch.setOutput(output2);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -57,13 +64,13 @@ public class WorkerJob {
 						
 						CommandRunHistory history= new CommandRunHistory();
 						history.setCommandid(ch.getCommand().getId());
-						history.setCommandoutput(ch.getOutput());
+						history.setCommandoutput(output);
 						history.setCommandstring(ch.getCommand().getCommandstring());
 						history.setExpectedoutputcontains(ch.getCommand().getExpectedOutput());
 						history.setHostid(ch.getHost().getId());
 						history.setHostname(ch.getHost().getHostname());
-						history.setOwnerid(ch.getCommand().getOwner().getId());
-						history.setOwnername(ch.getCommand().getOwner().getName());
+						//history.setOwnerid(ch.getCommand().getOwner().getId());
+						//history.setOwnername(ch.getCommand().getOwner().getName());
 						history.setRunDate(new Date());
 						history.setSuccess(ch.getSuccess());
 						//history.setTenantid(ch.getHost());

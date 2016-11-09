@@ -1,0 +1,22 @@
+<div class="container">
+
+    <table class="table table-striped table-hover">
+
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Hostname</th>
+            <th>Ipv4</th>
+
+        </tr>
+        </thead>
+        <tr ng-repeat="host in hosts">
+            <td>{{ host.name }}</td>
+            <td>{{ host.hostname }}</td>
+            <td>{{ host.hostipaddress }}</td>
+
+
+        </tr>
+    </table>
+
+</div>

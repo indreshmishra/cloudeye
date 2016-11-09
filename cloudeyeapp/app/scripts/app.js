@@ -38,9 +38,17 @@ angular
       templateUrl: 'views/tenant.html',
       controller: 'TenantCtrl'
       })
+      .when('/host',{
+      templateUrl: 'views/host.html',
+      controller: 'HostCtrl'
+      })
       .when('/command',{
        templateUrl: 'views/command.html',
        controller: 'CommandCtrl'
+      })
+      .when('/commandhost',{
+      templateUrl: 'views/commandhost.html',
+      controller: 'CommandHostCtrl'
       })
       .when('/workernode',{
         templateUrl: 'views/workernode.html',
