@@ -22,7 +22,7 @@ public class CommandHostDao {
 	
 	@SuppressWarnings("unchecked")
 	public List<CommandHost> getAllQueueCommandsToRun(String workerid){
-		Query query= entityManager.createQuery("from CommandHost where commandStatus=:arg1"); //TODO for worker id filtering
+		Query query= entityManager.createQuery("from CommandHost where commandStatus=:arg1 and disabled=false"); //TODO for worker id filtering
 		query.setParameter("arg1", CommandStatus.QUEUED);
 		//query.setParameter("arg2", workerid);
 		List<?> chs= query.getResultList();

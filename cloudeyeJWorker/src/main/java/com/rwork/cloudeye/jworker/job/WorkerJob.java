@@ -34,6 +34,7 @@ public class WorkerJob {
 	public void pickupCommandHosts(String workerid, ThreadPoolExecutor jobexecutor){
 		System.out.println("Picking up All queued command host");
 		List<CommandHost> listofcommandhosts = commandhostDao.getAllQueueCommandsToRun(workerid);
+		System.out.println("Picked up "+ listofcommandhosts.size()+" commands to work upon");
 		int maxlength= Integer.parseInt(env.getProperty("command.output.maxlength"));
 		for(CommandHost ch: listofcommandhosts){
 			jobexecutor.execute(new Runnable() {
@@ -60,11 +61,21 @@ public class WorkerJob {
 					}
 					
 					if(output!= null && output.contains(ch.getCommand().getContainString())){
+						int bindex= output.indexOf(ch.getCommand().getContainString());
+						int m = (output.length() < maxlength)? output.length(): maxlength;
+						if(output.length() > maxlength){
+							int eindex = (bindex + m > output.length())? output.length(): bindex+m;
+							ch.setOutput(output.substring(bindex,eindex));
+						}
+						else{
+							ch.setOutput(output);
+						}
 						ch.setSuccess(true);
 					}
 					else{
 						ch.setSuccess(false);
 					}
+					ch.setLastRun(new Date());
 					commandhostDao.updateCommandHost(ch);
 					
 					CommandRunHistory history= new CommandRunHistory();

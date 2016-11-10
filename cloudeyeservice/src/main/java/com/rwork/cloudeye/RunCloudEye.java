@@ -151,6 +151,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		.authorizeRequests()
 		.antMatchers("/auth/check").hasAnyAuthority("USER","ADMIN")
 		.antMatchers("/command/**").hasAuthority("USER")
+		.antMatchers("/command/**/host/**").hasAuthority("USER")
 		.antMatchers("/host/**").hasAnyAuthority("USER")
 		.antMatchers("/commandhost/**").hasAnyAuthority("USER")
 		.antMatchers("/tenant/**").hasAuthority("ADMIN")

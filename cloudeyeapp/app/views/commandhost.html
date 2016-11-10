@@ -10,7 +10,10 @@
             <th>Command</th>
             <th>Output Should Contain</th>
             <th>Status</th>
+            <th>Disabled</th>
+            <th>Run Output</th>
             <th>Last Success</th>
+            <th>Last Run</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -21,13 +24,40 @@
             <td>{{ ch.command.commandstring }}</td>
             <td> {{ch.command.containString }}</td>
             <td> {{ch.commandStatus}} </td>
+            <td>{{ch.disabled}}</td>
+            <td> {{ch.output }}</td>
             <td> {{ch.success}}</td>
+            <td>{{ch.lastRun | date : 'medium'}}</td>
             <td>
-                <span class="glyphicon glyphicon-remove" ng-click="delete(ch.id)">
-                <span class="glyphicon glyphicon-refresh" ng-click="reset(ch.id)">
-                <span class="glyphicon glyphicon-play" ng-click="run(ch.id)">
+                <span class="glyphicon glyphicon-remove" ng-click="delete(ch.id)"> </span><br>
+                <span class="glyphicon glyphicon-refresh" ng-click="enable(ch.id)"> </span><br>
+                <span class="glyphicon glyphicon-play" ng-click="run(ch.id)"></span><br>
+                <span class="glyphicon glyphicon-off" ng-click="disable(ch.id)"></span>
             </td>
         </tr>
     </table>
 
+</div>
+<div class="container">
+    <form class="form-inline" ng-hide="false" ng-submit="newcommandhost()">
+
+        <div class="form-group">
+            <label>Host</label>
+            <select ng-model="selectedhostid">
+                <option  ng-repeat="host in hosts" value="{{host.id}}">{{host.name}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Command</label>
+
+            <select ng-model="selectedcommandid">
+                <option  ng-repeat="command in commands" value="{{command.id}}">{{command.name}}</option>
+            </select>
+        </div>
+
+
+        <button type="submit" class="btn btn-default" >Create</button>
+    </form>
+
+    <p> {{ errormessage }}</p>
 </div>

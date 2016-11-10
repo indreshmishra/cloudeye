@@ -1,9 +1,11 @@
 package com.rwork.cloudeye.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +25,7 @@ import com.rwork.cloudeye.runner.SSHRunner;
 import com.rwork.cloudeye.service.WorkerNodeService;
 
 @RestController
-@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
+//@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
 public class CommandHostController {
 	
 	@Autowired
@@ -39,6 +41,9 @@ public class CommandHostController {
 	SSHRunner sshrunner;
 	
 	@Autowired
+	private Environment env;
+	
+	@Autowired
 	private WorkerNodeService workernodeService;
 
 	@RequestMapping(path="/command/{commandid}/host/{hostid}",method=RequestMethod.POST)
@@ -49,6 +54,8 @@ public class CommandHostController {
 		
 		ch.setCommand(command);
 		ch.setHost(host);
+		ch.setDisabled(false);
+		ch.setCommandStatus(CommandStatus.QUEUED); //TODO ,it should be created only queued later depending upon scheduling
 		ch.setCommandStatus(CommandStatus.CREATED);
 		commandhostdao.createCommandHost(ch);
 		
@@ -72,10 +79,26 @@ public class CommandHostController {
 		commandhostdao.deleteById(id);
 		return new ResponseEntity(HttpStatus.OK);
 	}
+	@RequestMapping(path="/commandhost/{id}/disable",method=RequestMethod.PUT)
+	public ResponseEntity<?> disableCommandHost(@PathVariable Long id){
+		CommandHost ch= commandhostdao.findById(id);
+		ch.setDisabled(true);
+		commandhostdao.updateCommandHost(ch);
+		return new ResponseEntity(HttpStatus.OK);
+	}
+	
+	@RequestMapping(path="/commandhost/{id}/enable",method=RequestMethod.PUT)
+	public ResponseEntity<?> enableCommandHost(@PathVariable Long id){
+		CommandHost ch= commandhostdao.findById(id);
+		ch.setDisabled(false);
+		commandhostdao.updateCommandHost(ch);
+		return new ResponseEntity(HttpStatus.OK);
+	}
 	  
 	@RequestMapping(path="/commandhost/{id}/run",method=RequestMethod.PUT)
 	public ResponseEntity<?> runCommandOnHost(@PathVariable long id){
 		CommandHost ch= commandhostdao.findById(id);
+		int maxlength= Integer.parseInt(env.getProperty("command.output.maxlength"));
 		String output=null;
 		try {
 			 output = sshrunner.runCommand(ch.getHost().getHostipaddress(), ch.getCommand().getCommandstring(), ch.getHost().getHostuser(), ch.getHost().getHostpassword());
@@ -89,6 +112,16 @@ public class CommandHostController {
 		}
 		if(output!= null && output.contains(ch.getCommand().getContainString())){
 			ch.setSuccess(true);
+			int bindex= output.indexOf(ch.getCommand().getContainString());
+			int m = (output.length() < maxlength)? output.length(): maxlength;
+			if(output.length() > maxlength){
+				int eindex = (bindex + m > output.length())? output.length(): bindex+m;
+				ch.setOutput(output.substring(bindex,eindex));
+			}
+			else{
+				ch.setOutput(output);
+			}
+			ch.setLastRun(new Date());
 			commandhostdao.updateCommandHost(ch);
 		}
 		return new ResponseEntity(HttpStatus.ACCEPTED);
