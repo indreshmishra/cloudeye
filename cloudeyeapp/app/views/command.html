@@ -23,3 +23,20 @@
   </table>
 
 </div>
+<div class="container">
+  <form class="form-inline" ng-hide="false" ng-submit="newcommand()">
+
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Command Name" ng-model="command.name"/>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Command" ng-model="command.commandstring"/>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Result should Contain" ng-model="command.containString"/>
+    </div>
+    <button type="submit" class="btn btn-default" >Create</button>
+  </form>
+
+  <p> {{ errormessage }}</p>
+</div>
