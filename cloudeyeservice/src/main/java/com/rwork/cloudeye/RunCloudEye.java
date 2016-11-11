@@ -135,9 +135,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	public void configure(WebSecurity web)throws Exception{
 		web.ignoring().antMatchers("/about");
-		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/auth/check");
-		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/command/**");
-		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/commandhost/**");
+//		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/auth/check");
+//		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/command/**");
+//		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/command/**/host/**");
+//		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/commandhost/**");
 		web.ignoring().antMatchers(HttpMethod.OPTIONS, "**");
 		
 	}
@@ -154,6 +155,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		.antMatchers("/command/**/host/**").hasAuthority("USER")
 		.antMatchers("/host/**").hasAnyAuthority("USER")
 		.antMatchers("/commandhost/**").hasAnyAuthority("USER")
+		.antMatchers("/commandhost/**/**").hasAnyAuthority("USER")
 		.antMatchers("/tenant/**").hasAuthority("ADMIN")
 		.antMatchers("/user/**").hasAuthority("ADMIN")
 		.antMatchers("/role/**").hasAuthority("ADMIN")

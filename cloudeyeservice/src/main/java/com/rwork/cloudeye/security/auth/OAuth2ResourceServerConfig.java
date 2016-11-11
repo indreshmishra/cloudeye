@@ -76,6 +76,7 @@ public class OAuth2ResourceServerConfig  extends ResourceServerConfigurerAdapter
 		.authorizeRequests()
 		.antMatchers("/auth/check").hasAnyAuthority("USER","ADMIN")
 		.antMatchers("/command/**").hasAuthority("USER")
+		.antMatchers("/command/**/host/**").hasAuthority("USER")
 		.antMatchers("/tenant/**").hasAuthority("ADMIN")
 		.antMatchers("/user/**").hasAuthority("ADMIN")
 		.antMatchers("/role/**").hasAuthority("ADMIN")

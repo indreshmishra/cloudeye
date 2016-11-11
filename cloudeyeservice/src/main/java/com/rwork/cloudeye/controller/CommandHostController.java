@@ -24,8 +24,8 @@ import com.rwork.cloudeye.model.Host;
 import com.rwork.cloudeye.runner.SSHRunner;
 import com.rwork.cloudeye.service.WorkerNodeService;
 
-@RestController
 //@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
+@RestController
 public class CommandHostController {
 	
 	@Autowired
@@ -98,6 +98,8 @@ public class CommandHostController {
 	@RequestMapping(path="/commandhost/{id}/run",method=RequestMethod.PUT)
 	public ResponseEntity<?> runCommandOnHost(@PathVariable long id){
 		CommandHost ch= commandhostdao.findById(id);
+		ch.setCommandStatus(CommandStatus.RUNNING);
+		commandhostdao.updateCommandHost(ch);
 		int maxlength= Integer.parseInt(env.getProperty("command.output.maxlength"));
 		String output=null;
 		try {
@@ -110,20 +112,27 @@ public class CommandHostController {
 		if(output != null && output.contains("FAILED")){
 			return new ResponseEntity(output, HttpStatus.BAD_REQUEST);
 		}
+		
 		if(output!= null && output.contains(ch.getCommand().getContainString())){
 			ch.setSuccess(true);
-			int bindex= output.indexOf(ch.getCommand().getContainString());
-			int m = (output.length() < maxlength)? output.length(): maxlength;
-			if(output.length() > maxlength){
-				int eindex = (bindex + m > output.length())? output.length(): bindex+m;
-				ch.setOutput(output.substring(bindex,eindex));
-			}
-			else{
-				ch.setOutput(output);
-			}
-			ch.setLastRun(new Date());
-			commandhostdao.updateCommandHost(ch);
+			
 		}
+		else{
+			ch.setSuccess(false);
+		}
+		int bindex= output.indexOf(ch.getCommand().getContainString());
+		int m = (output.length() < maxlength)? output.length(): maxlength;
+		if(output.length() > maxlength){
+			int eindex = (bindex + m > output.length())? output.length(): bindex+m;
+			ch.setOutput(output.substring(bindex,eindex));
+		}
+		else{
+			ch.setOutput(output);
+		}
+		ch.setLastRun(new Date());
+		ch.setCommandStatus(CommandStatus.QUEUED);
+		commandhostdao.updateCommandHost(ch);
+		
 		return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
 }

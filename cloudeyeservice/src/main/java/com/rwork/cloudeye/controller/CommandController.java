@@ -17,7 +17,7 @@ import com.rwork.cloudeye.dao.CommandDao;
 import com.rwork.cloudeye.dao.UserDao;
 import com.rwork.cloudeye.model.Command;
 
-@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
+//@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
 @RestController
 public class CommandController {
 	
