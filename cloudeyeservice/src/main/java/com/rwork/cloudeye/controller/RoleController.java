@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rwork.cloudeye.dao.RoleDao;
 import com.rwork.cloudeye.model.Role;
 
-@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
+//@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
 @RestController
 public class RoleController {
 

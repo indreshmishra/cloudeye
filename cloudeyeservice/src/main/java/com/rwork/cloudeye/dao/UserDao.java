@@ -32,7 +32,19 @@ public class UserDao {
 	
 	public User getUser(long id)
 	{
-		return entityManager.find(User.class, id);
+		User user= null;
+		try{
+			user= entityManager.find(User.class, id);
+		}
+		catch(Exception e){
+			
+		}
+		return user;
+	}
+	
+	public void deleteById(long id){
+		User u= getUser(id);
+		entityManager.remove(u);
 	}
 	
 	public User updateUser(User u)
@@ -41,7 +53,15 @@ public class UserDao {
 	}
 	
 	public User getUserByName(String name){
-		return (User) entityManager.createQuery("from User where username = ?1").setParameter(1, name).getSingleResult();
+		User user= null;
+		try{
+		user= (User) entityManager.createQuery("from User where username = ?1").setParameter(1, name).getSingleResult();
+		}
+		catch(Exception e){
+			
+		}
+		
+		return user;
 	}
 
 }

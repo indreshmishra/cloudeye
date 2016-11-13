@@ -33,10 +33,10 @@ public class User {
 	private Long expiryperiod;
 	private Boolean canNotbeDeletedEver;
 
-	@ManyToMany(fetch=FetchType.EAGER,cascade=CascadeType.PERSIST)
+	@ManyToMany(fetch=FetchType.EAGER,cascade=CascadeType.MERGE)
 	private List<Role> roles;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.MERGE)
 	private Tenant tenant;
 	
 	public long getId() {

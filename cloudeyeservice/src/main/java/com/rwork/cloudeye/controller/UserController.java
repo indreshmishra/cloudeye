@@ -28,7 +28,7 @@ import com.rwork.cloudeye.model.User;
  * @author indresh.mishra
  *
  */
-@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
+//@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
 @RestController
 public class UserController {
 	
@@ -47,6 +47,18 @@ public class UserController {
 		return userDao.getUser(id);
 	}
 	
+	@RequestMapping(path="/user/{id}",method=RequestMethod.DELETE)
+	public ResponseEntity<?> deleteUser(@PathVariable long id)
+	{
+		User u = userDao.getUser(id);
+		if(u.getCanNotbeDeletedEver() != null && u.getCanNotbeDeletedEver()==true){
+			return new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
+		 userDao.deleteById(id);
+		 return new ResponseEntity(HttpStatus.OK);
+	}
+	
+	
 	@RequestMapping("/userbyname")
 	public User getUser(@RequestHeader String username){
 		return userDao.getUserByName(username);
@@ -62,9 +74,17 @@ public class UserController {
 	@RequestMapping(path="/user",method=RequestMethod.POST)
 	public ResponseEntity<?> createUser(@RequestBody User user)
 	{
-		if(user.getName()==null || user.getPassword()==null){
+		if(user.getName()==null || user.getUsername()==null || user.getRoles().size()< 1 || user.getPassword()==null){
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
+		User au= userDao.getUserByName(user.getUsername());
+		if(au != null){
+			return new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
+		user.setEnabled(true);
+		user.setDoespasswordeverexpires(false);
+		user.setLocked(false);
+		user.setPasswordExpired(false);
 		userDao.createUser(user);
 		return new ResponseEntity(HttpStatus.CREATED);
 	}
