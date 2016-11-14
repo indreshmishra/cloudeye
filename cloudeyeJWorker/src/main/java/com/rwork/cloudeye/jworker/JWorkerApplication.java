@@ -73,7 +73,7 @@ public class JWorkerApplication implements CommandLineRunner{
 			
 			@Override
 			public void run() {
-				workerjob.pickupCommandHosts(workerUUID, jobexecutor);
+				if(workerUUID != null)workerjob.pickupCommandHosts(workerUUID, jobexecutor);
 				
 			}
 		}, 5, Integer.parseInt(env.getProperty("jworker.job.scheduler.duration")), TimeUnit.SECONDS);

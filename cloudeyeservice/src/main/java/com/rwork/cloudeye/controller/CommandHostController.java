@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +48,7 @@ public class CommandHostController {
 	private WorkerNodeService workernodeService;
 
 	@RequestMapping(path="/command/{commandid}/host/{hostid}",method=RequestMethod.POST)
-	public ResponseEntity<?> assignCommandToHost(@PathVariable Long commandid,@PathVariable Long hostid){
+	public ResponseEntity<?> assignCommandToHost(@PathVariable Long commandid,@PathVariable Long hostid ,@RequestBody CommandHost chinput) {
 		CommandHost ch=new CommandHost();
 		Command command= commandDao.findByID(commandid);
 		Host host=hostDao.getHost(hostid);
@@ -55,11 +56,14 @@ public class CommandHostController {
 		ch.setCommand(command);
 		ch.setHost(host);
 		ch.setDisabled(false);
-		ch.setCommandStatus(CommandStatus.QUEUED); //TODO ,it should be created only queued later depending upon scheduling
+		//ch.setCommandStatus(CommandStatus.QUEUED); //TODO ,it should be created only queued later depending upon scheduling
 		ch.setCommandStatus(CommandStatus.CREATED);
+		ch.setRunAgain(chinput.getRunAgain());
+		ch.setRunOnce(!chinput.getRunAgain());
+		ch.setFixedDelay(chinput.getFixedDelay());
 		commandhostdao.createCommandHost(ch);
 		
-		workernodeService.assignWorkerNodeToCommandHost(ch);
+		//workernodeService.assignWorkerNodeToCommandHost(ch);
 		
 		return new ResponseEntity(HttpStatus.CREATED);
 	}

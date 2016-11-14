@@ -11,10 +11,12 @@ import org.springframework.stereotype.Component;
 
 import com.rwork.cloudeye.jworker.dao.CommandHostDao;
 import com.rwork.cloudeye.jworker.dao.CommandRunHistoryRepository;
+import com.rwork.cloudeye.jworker.dao.WorkerNodeDao;
 import com.rwork.cloudeye.jworker.model.CommandRunHistory;
 import com.rwork.cloudeye.jworker.runner.SSHRunner;
 import com.rwork.cloudeye.model.CommandHost;
 import com.rwork.cloudeye.model.CommandStatus;
+import com.rwork.cloudeye.model.WorkerNode;
 
 @Component
 public class WorkerJob {
@@ -30,11 +32,17 @@ public class WorkerJob {
 	
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private WorkerNodeDao workernodeDao;
 
 	public void pickupCommandHosts(String workerid, ThreadPoolExecutor jobexecutor){
 		System.out.println("Picking up All queued command host");
 		List<CommandHost> listofcommandhosts = commandhostDao.getAllQueueCommandsToRun(workerid);
 		System.out.println("Picked up "+ listofcommandhosts.size()+" commands to work upon");
+		WorkerNode workernode= workernodeDao.getWorkerNodeByUUID(workerid);
+		workernode.setTotalThreadRunning(listofcommandhosts.size());
+		workernodeDao.updateWorkerNode(workernode);
 		int maxlength= Integer.parseInt(env.getProperty("command.output.maxlength"));
 		for(CommandHost ch: listofcommandhosts){
 			jobexecutor.execute(new Runnable() {
@@ -91,8 +99,12 @@ public class WorkerJob {
 					history.setSuccess(ch.getSuccess());
 					//history.setTenantid(ch.getHost());
 					commandrunHistoryRepo.save(history);
-					
+					if(ch.getRunAgain() == true){
 					ch.setCommandStatus(CommandStatus.QUEUED);
+					}
+					else{
+						ch.setCommandStatus(CommandStatus.STOPPED);
+					}
 					commandhostDao.updateCommandHost(ch);
 				}
 			});

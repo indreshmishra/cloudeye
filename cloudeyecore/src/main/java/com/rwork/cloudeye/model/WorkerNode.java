@@ -36,7 +36,15 @@ public class WorkerNode {
 	
 	private long totalMemoryFreeInBytes;
 	
-	 
+	private long totalThreadRunning;
+
+	public long getTotalThreadRunning() {
+		return totalThreadRunning;
+	}
+
+	public void setTotalThreadRunning(long totalThreadRunning) {
+		this.totalThreadRunning = totalThreadRunning;
+	}
 
 	public long getTotalSystemMemoryInBytes() {
 		return totalSystemMemoryInBytes;

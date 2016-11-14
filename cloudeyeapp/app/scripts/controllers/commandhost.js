@@ -60,10 +60,10 @@ angular.module('cloudeyeappApp')
                                                          });
                                                  });
                                                  };
-
+        $scope.commandhost={'runAgain':false,'fixedDelay':0};
         $scope.newcommandhost=function(){
             console.log("creating new commandhost");
-            $http.post('http://localhost:8080/command/'+$scope.selectedcommandid+'/host/'+$scope.selectedhostid ,{},{headers:{ 'Authorization': 'Basic '+$cookieStore.get('globals').currentUser.authdata}}).success(function(data,status){
+            $http.post('http://localhost:8080/command/'+$scope.selectedcommandid+'/host/'+$scope.selectedhostid ,$scope.commandhost,{headers:{ 'Authorization': 'Basic '+$cookieStore.get('globals').currentUser.authdata ,'Content-Type':'application/json'}}).success(function(data,status){
                 console.log("new command host is created");
                  $http.get('http://localhost:8080/commandhost',{headers:{ 'Authorization': 'Basic '+$cookieStore.get('globals').currentUser.authdata}})
                                                                  .success(function(response){

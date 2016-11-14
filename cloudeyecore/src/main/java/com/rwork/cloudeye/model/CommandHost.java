@@ -37,7 +37,7 @@ public class CommandHost extends BaseObject{
 	
 	private Date firstRunAfterThisOnly;
 	
-	private Long  fixedDelay;
+	private Long  fixedDelay; //in seconds
 	
 	private Boolean runOnce;
 	
