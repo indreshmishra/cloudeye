@@ -1,0 +1,26 @@
+<div class="container-fluid">
+
+    <table class="table table-striped table-hover">
+
+        <thead>
+        <tr>
+            <th>Hostname</th>
+            <th>Command String</th>
+            <th>Output should Contain</th>
+            <th>Actual Output</th>
+            <th>Success</th>
+            <th>Run Date</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="record in records">
+            <td>{{record.hostname}}</td>
+            <td>{{ record.commandstring }}</td>
+            <td>{{ record.expectedoutputcontains }}</td>
+            <td>{{ record.commandoutput }}</td>
+            <td>{{record.success}}</td>
+            <td> {{record.runDate| date: 'medium' }}</td>
+
+        </tr>
+    </table>
+
+</div>

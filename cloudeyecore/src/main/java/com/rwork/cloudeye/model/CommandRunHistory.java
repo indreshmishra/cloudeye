@@ -1,4 +1,4 @@
-package com.rwork.cloudeye.jworker.model;
+package com.rwork.cloudeye.model;
 
 import java.util.Date;
 

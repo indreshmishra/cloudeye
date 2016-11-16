@@ -54,6 +54,9 @@ angular
         templateUrl: 'views/workernode.html',
         controller: 'WorkerNodeCtrl'
       })
+      .when('/commandhosthistory',{
+      templateUrl: 'views/runhistory.html',
+      controller: 'RunHistoryCtrl'})
       .otherwise({
         redirectTo: '/'
       });

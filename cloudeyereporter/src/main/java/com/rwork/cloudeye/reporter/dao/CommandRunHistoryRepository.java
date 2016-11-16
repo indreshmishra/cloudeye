@@ -1,4 +1,4 @@
-package com.rwork.cloudeye.jworker.dao;
+package com.rwork.cloudeye.reporter.dao;
 
 import java.util.List;
 
