@@ -22,6 +22,9 @@ public class WorkerJob {
 	
 	@Autowired
 	private WorkerNodeDao workernodeDao;
+	
+	@Autowired
+	private SSHExecutor sshexecutor;
 
 	public void pickupCommandHosts(String workerid, ThreadPoolExecutor jobexecutor){
 		System.out.println("Picking up All queued command host");
@@ -32,7 +35,14 @@ public class WorkerJob {
 		workernodeDao.updateWorkerNode(workernode);
 		
 		for(CommandHost ch: listofcommandhosts){
-			jobexecutor.execute(new SSHExecutor(ch));
+			jobexecutor.execute(new Runnable() {
+				
+				@Override
+				public void run() {
+					sshexecutor.execute(ch);
+					
+				}
+			});
 		}
 	}
 }

@@ -48,7 +48,7 @@ public class WorkAllocatorJob {
 	 * this will take care to redistribute work from non-alive nodes to alive nodes.
 	 */
 	public void reallocateWorkOfNonAliveNodes(){
-		System.out.println("ReDistributing load of Workers");
+		System.out.println("ReDistributing load of Workers for stucked commands");
 		  List<WorkerNode> alivenodes=(List<WorkerNode>) workernodeDao.getAllWorkerNodes();
 		  
 		  List<CommandHost> chs = commandhostDao.getAllStuckedCommandsToBeReQueued();

@@ -1,5 +1,6 @@
 package com.rwork.cloudeye.reporter.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -11,4 +12,6 @@ public interface CommandRunHistoryRepository extends MongoRepository<CommandRunH
 	public List<CommandRunHistory> findByHostname(String hostname);
 	
 	public List<CommandRunHistory> findByCommandstring(String commandstring);
+	
+	public List<CommandRunHistory> findByRunDateGreaterThan(Date fromDate);
 }

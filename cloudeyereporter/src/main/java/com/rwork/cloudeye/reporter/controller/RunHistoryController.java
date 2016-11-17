@@ -1,5 +1,6 @@
 package com.rwork.cloudeye.reporter.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class RunHistoryController {
 
 	@RequestMapping("/runhistory")
 	public List<CommandRunHistory> getAllHistory(){
-		return historyrepo.findAll();
+		Long now=new Date().getTime();
+		Date startDate=new Date(now- now %(24 * 60 * 60 * 1000));
+		
+		return historyrepo.findByRunDateGreaterThan(startDate);
 	}
 }

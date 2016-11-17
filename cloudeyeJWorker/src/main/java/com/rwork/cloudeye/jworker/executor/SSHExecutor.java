@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import com.rwork.cloudeye.jworker.dao.CommandHostDao;
 import com.rwork.cloudeye.jworker.dao.CommandRunHistoryRepository;
@@ -13,7 +14,8 @@ import com.rwork.cloudeye.jworker.runner.SSHRunner;
 import com.rwork.cloudeye.model.CommandHost;
 import com.rwork.cloudeye.model.CommandStatus;
 
-public class SSHExecutor implements Runnable{
+@Component
+public class SSHExecutor {
 	
 	@Autowired
 	private CommandHostDao commandhostDao;
@@ -27,14 +29,12 @@ public class SSHExecutor implements Runnable{
 	@Autowired
 	private Environment env;
 	
-	private CommandHost ch;
 	
-	 public SSHExecutor(CommandHost ch) {
-		 this.ch=ch;
-	 }
+	
+	
 
-	@Override
-	public void run() {
+	
+	public void execute(CommandHost ch) {
 		String output=null;
 		ch.setCommandStatus(CommandStatus.RUNNING);
 		int maxlength= Integer.parseInt(env.getProperty("command.output.maxlength"));

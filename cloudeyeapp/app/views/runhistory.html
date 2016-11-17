@@ -1,5 +1,7 @@
 <div class="container-fluid">
 
+    <label>Filter</label><input type="text" ng-model="filtertext">
+    <button type="button" class="btn btn-primary">Today</button>
     <table class="table table-striped table-hover">
 
         <thead>
@@ -12,7 +14,7 @@
             <th>Run Date</th>
         </tr>
         </thead>
-        <tr ng-repeat="record in records">
+        <tr ng-repeat="record in records | filter: filtertext">
             <td>{{record.hostname}}</td>
             <td>{{ record.commandstring }}</td>
             <td>{{ record.expectedoutputcontains }}</td>
