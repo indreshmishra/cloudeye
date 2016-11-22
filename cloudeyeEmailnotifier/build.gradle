@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+
+sourceCompatibility = 1.8
+version = '1.0'
+jar {
+	baseName="cloudeyeEmailnotifier"
+    manifest {
+        attributes 'Implementation-Title': 'CloudEye',
+                   'Implementation-Version': version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	compile project(':cloudeyecore')
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+    
+	 compile group: 'com.rabbitmq', name: 'amqp-client', version: '3.6.5'
+     
+    
+	  compile("javax.el:javax.el-api:2.2.4")
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}
