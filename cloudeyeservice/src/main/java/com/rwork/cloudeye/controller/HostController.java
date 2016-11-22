@@ -1,5 +1,6 @@
 package com.rwork.cloudeye.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -14,13 +15,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rwork.cloudeye.dao.HostDao;
+import com.rwork.cloudeye.dao.UserDao;
 import com.rwork.cloudeye.model.Host;
+import com.rwork.cloudeye.model.User;
 
 @RestController
 public class HostController {
 
 	@Autowired
 	HostDao hostDao;
+	
+	@Autowired
+	UserDao userDao;
 	
 	@RequestMapping("/host/{hostid}")
 	public Host getHost(@PathVariable long hostid){
@@ -33,7 +39,9 @@ public class HostController {
 	}
 	
 	@RequestMapping(path="/host",method=RequestMethod.POST)
-	public ResponseEntity<?> createHost(@RequestBody Host host){
+	public ResponseEntity<?> createHost(@RequestBody Host host, Principal user){
+		User loggedinuser = userDao.getUserByName(user.getName());
+		host.setOwner(loggedinuser);
 		hostDao.createHost(host);
 		return new ResponseEntity(HttpStatus.CREATED);
 	}

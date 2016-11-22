@@ -66,5 +66,28 @@ public class WorkAllocatorJob {
 			  }
 		  }
 	}
+	
+	/**
+	 * this will take care to redistribute work among alive nodes
+	 */
+	public void redistributeWorkAmongAliveNodes(){
+		System.out.println("ReDistributing load of Workers for running commands");
+		  List<WorkerNode> alivenodes=(List<WorkerNode>) workernodeDao.getAllWorkerNodes();
+		  
+		  List<CommandHost> chs = commandhostDao.getAllCommandsToBeReDistributed();
+		  System.out.println("Number of alive worker nodes are "+ alivenodes.size());
+		  System.out.println("Number of commands running or queued or created"+ chs.size());
+		  
+		  if(alivenodes.size()> 0 && chs.size()>0){
+			  int i =0;
+			  for(CommandHost ch: chs){
+				  int anode= i % alivenodes.size();
+				  ch.setNextAssignedWorkerNode(alivenodes.get(anode));
+				 
+				  commandhostDao.updateCommandHost(ch);
+				  i++;
+			  }
+		  }
+	}
 
 }

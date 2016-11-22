@@ -57,8 +57,15 @@ public class CommandHost extends BaseObject{
 	@OneToOne
 	private WorkerNode assignedWorkerNode;
 	
+	@OneToOne
+	private WorkerNode nextAssignedWorkerNode;
 	
-	
+	public WorkerNode getNextAssignedWorkerNode() {
+		return nextAssignedWorkerNode;
+	}
+	public void setNextAssignedWorkerNode(WorkerNode nextAssignedWorkerNode) {
+		this.nextAssignedWorkerNode = nextAssignedWorkerNode;
+	}
 	public long getId() {
 		return id;
 	}

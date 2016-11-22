@@ -28,7 +28,7 @@ public class JobsRunApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("Running Jobs of Cloudeye");
-		ScheduledThreadPoolExecutor jobmonitor= (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(3);
+		ScheduledThreadPoolExecutor jobmonitor= (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(4);
 		jobmonitor.scheduleAtFixedRate(new Runnable() {
 			
 			@Override
@@ -66,11 +66,25 @@ public class JobsRunApplication implements CommandLineRunner{
 					workallocator.reallocateWorkOfNonAliveNodes();
 				}
 				catch(Exception e){
-					System.out.println("ERROR: exception while allocating work to worker nodes");
+					System.out.println("ERROR: exception while allocating work to worker nodes for stucked command");
 				}
 				
 			}
-		}, 0, Integer.parseInt(env.getProperty("work.allocatorjob.interval")), TimeUnit.SECONDS);
+		}, 0, Integer.parseInt(env.getProperty("work.reallocateWorkOfNonAliveNodes.interval")), TimeUnit.SECONDS);
+			
+			jobmonitor.scheduleAtFixedRate(new Runnable() {
+				
+				@Override
+				public void run() {
+					try{
+						workallocator.redistributeWorkAmongAliveNodes();
+					}
+					catch(Exception e){
+						System.out.println("ERROR: exception while allocating work to worker nodes for running jobs");
+					}
+					
+				}
+			}, 0, Integer.parseInt(env.getProperty("work.redistributeWorkAmongAliveNodes.interval")), TimeUnit.SECONDS);
 	}
 
 }

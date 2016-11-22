@@ -40,6 +40,16 @@ public class CommandHostDao {
 		return (List<CommandHost>) chs;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CommandHost> getAllCommandsToBeReDistributed(){
+		Query query= entityManager.createQuery("from CommandHost where commandStatus !=:arg1 and assignedWorkerNode.alive=true and disabled=false"); //TODO for worker id filtering
+		query.setParameter("arg1", CommandStatus.STOPPED);
+		
+		List<?> chs= query.getResultList();
+		
+		return (List<CommandHost>) chs;
+	}
+	
 	public void updateCommandHost(CommandHost ch){
 		entityManager.merge(ch);
 	}

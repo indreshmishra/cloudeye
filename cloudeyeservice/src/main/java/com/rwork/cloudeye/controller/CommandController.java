@@ -1,5 +1,6 @@
 package com.rwork.cloudeye.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rwork.cloudeye.dao.CommandDao;
 import com.rwork.cloudeye.dao.UserDao;
 import com.rwork.cloudeye.model.Command;
+import com.rwork.cloudeye.model.User;
 
 //@CrossOrigin(origins="*",maxAge=18000,allowedHeaders="*",allowCredentials="false")
 @RestController
@@ -46,9 +48,10 @@ public class CommandController {
 	}
 	
 	@RequestMapping(path="/command",method=RequestMethod.POST)
-	public ResponseEntity<?> createCommand(@RequestBody Command c)
+	public ResponseEntity<?> createCommand(@RequestBody Command c, Principal user)
 	{
-		
+		User loggedinuser= userDao.getUserByName(user.getName());
+		c.setOwner(loggedinuser);
 		commandDao.createCommand(c);
 		
 		return new ResponseEntity(HttpStatus.CREATED);

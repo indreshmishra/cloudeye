@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -18,7 +19,9 @@ public class Host {
 	private String hostipaddress;
 	private String hostuser;
 	private String hostpassword;
-//	private User owner;
+	
+	@ManyToOne
+	private User owner;
 //	private Tenant tenant;
 //	
 	
@@ -58,12 +61,12 @@ public class Host {
 	public void setHostpassword(String hostpassword) {
 		this.hostpassword = hostpassword;
 	}
-//	public User getOwner() {
-//		return owner;
-//	}
-//	public void setOwner(User owner) {
-//		this.owner = owner;
-//	}
+	public User getOwner() {
+		return owner;
+	}
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
 //	public Tenant getTenant() {
 //		return tenant;
 //	}

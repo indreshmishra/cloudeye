@@ -40,10 +40,12 @@ public class SSHExecutor {
 		int maxlength= Integer.parseInt(env.getProperty("command.output.maxlength"));
 		commandhostDao.updateCommandHost(ch);
 		try {
+			System.out.println("============running command==========");
 			 output = sshrunner.runCommand(ch.getHost().getHostipaddress(), ch.getCommand().getCommandstring(), ch.getHost().getHostuser(), ch.getHost().getHostpassword());
 			 int m = (output.length() < maxlength)? output.length(): maxlength;
 			 String output2=output.substring(0,m);
 			 ch.setOutput(output2);
+			 System.out.println("***********running command over************");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,6 +93,10 @@ public class SSHExecutor {
 		}
 		else{
 			ch.setCommandStatus(CommandStatus.STOPPED);
+		}
+		if(ch.getNextAssignedWorkerNode() != null){
+			ch.setAssignedWorkerNode(ch.getNextAssignedWorkerNode());
+			ch.setNextAssignedWorkerNode(null);
 		}
 		commandhostDao.updateCommandHost(ch);
 		

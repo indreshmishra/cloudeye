@@ -12,7 +12,7 @@ angular.module('cloudeyeappApp')
 
 
     $scope.newhost=function(){
-        host.name=host.hostname;
+        $scope.host.name=$scope.host.hostname;
         console.log($scope.host);
          $http.post('http://localhost:8080/host',$scope.host, {headers:{ 'Authorization': 'Basic '+$cookieStore.get('globals').currentUser.authdata}})
               .success(function(response){
