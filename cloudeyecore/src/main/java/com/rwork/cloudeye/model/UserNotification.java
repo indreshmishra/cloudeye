@@ -1,20 +1,34 @@
 package com.rwork.cloudeye.model;
 
-public class UserNotification {
+import java.io.Serializable;
+
+public class UserNotification implements Serializable{
 	
-	private User user;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1992425643460452852L;
+	private String username;
+	private String email;
 	private Boolean success;
 	private Boolean resumed;
-	private Host host;
-	private Command command;
+	private String host;
+	private String command;
 	private String message;
 	private String title;
 	private String channel; // email , sms , elk  etc.
-	public User getUser() {
-		return user;
+	
+	public String getUsername() {
+		return username;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public Boolean getSuccess() {
 		return success;
@@ -28,16 +42,18 @@ public class UserNotification {
 	public void setResumed(Boolean resumed) {
 		this.resumed = resumed;
 	}
-	public Host getHost() {
+	
+	
+	public String getHost() {
 		return host;
 	}
-	public void setHost(Host host) {
+	public void setHost(String host) {
 		this.host = host;
 	}
-	public Command getCommand() {
+	public String getCommand() {
 		return command;
 	}
-	public void setCommand(Command command) {
+	public void setCommand(String command) {
 		this.command = command;
 	}
 	public String getMessage() {
@@ -45,6 +61,18 @@ public class UserNotification {
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getChannel() {
+		return channel;
+	}
+	public void setChannel(String channel) {
+		this.channel = channel;
 	}
 	
 	

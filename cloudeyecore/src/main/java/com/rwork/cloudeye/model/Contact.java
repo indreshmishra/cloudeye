@@ -1,11 +1,18 @@
 package com.rwork.cloudeye.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="contact")
 public class Contact {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private long id;
 	
 	private String emailId;
 	private String mobile;
@@ -13,6 +20,14 @@ public class Contact {
 	private String facebookhandle;
 	private String address;
 	private String elkurl;
+	
+	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public String getEmailId() {
 		return emailId;
 	}

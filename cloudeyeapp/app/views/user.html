@@ -5,6 +5,7 @@
     <tr>
       <th>Id</th>
       <th>Name</th>
+      <th>Email</th>
       <th>Permanent User</th>
       <th>Tenant</th>
       <th>Roles</th>
@@ -14,6 +15,7 @@
     <tr ng-repeat="user in users">
       <td>{{user.id}}</td>
       <td>{{user.username}}</td>
+      <td>{{user.contact.emailId}}</td>
       <td>{{user.canNotbeDeletedEver}}</td>
       <td>{{user.tenant.name}}</td>
       <td>
@@ -38,6 +40,9 @@
     </div>
     <div class="form-group">
       <input type="text" class="form-control" placeholder="Username" ng-model="user.username"/>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Email" ng-model="user.contact.emailId"/>
     </div>
     <div class="form-group">
       <input type="password" class="form-control" placeholder="Password" ng-model="user.password"/>

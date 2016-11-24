@@ -13,6 +13,8 @@ import com.rwork.cloudeye.model.CommandRunHistory;
 import com.rwork.cloudeye.jworker.runner.SSHRunner;
 import com.rwork.cloudeye.model.CommandHost;
 import com.rwork.cloudeye.model.CommandStatus;
+import com.rwork.cloudeye.model.UserNotification;
+import com.rwork.cloudeye.restclient.NotificationRestClient;
 
 @Component
 public class SSHExecutor {
@@ -30,15 +32,16 @@ public class SSHExecutor {
 	private Environment env;
 	
 	
-	
-	
-
+	//TODO ,its giving error ,
+	//@Autowired
+	//private NotificationRestClient notificationRestClient;
 	
 	public void execute(CommandHost ch) {
 		String output=null;
 		ch.setCommandStatus(CommandStatus.RUNNING);
 		int maxlength= Integer.parseInt(env.getProperty("command.output.maxlength"));
 		commandhostDao.updateCommandHost(ch);
+		Boolean earliersuccess= ch.getSuccess();
 		try {
 			System.out.println("============running command==========");
 			 output = sshrunner.runCommand(ch.getHost().getHostipaddress(), ch.getCommand().getCommandstring(), ch.getHost().getHostuser(), ch.getHost().getHostpassword());
@@ -75,6 +78,29 @@ public class SSHExecutor {
 		ch.setLastRun(new Date());
 		commandhostDao.updateCommandHost(ch);
 		
+		if(earliersuccess != ch.getSuccess()){
+			//change in status of success of command host ,so send notification
+			System.out.println("preparing to send notification to user");
+			UserNotification notification=new UserNotification();
+			notification.setUsername(ch.getHost().getOwner().getUsername());
+			notification.setSuccess(ch.getSuccess());
+			notification.setHost(ch.getHost().getHostname());
+			notification.setChannel("email");
+			notification.setEmail(ch.getHost().getOwner().getContact().getEmailId());
+			if(earliersuccess !=null){
+				if(  earliersuccess==false){
+					notification.setTitle("Now Stable");
+					notification.setMessage("now your command is resumed back to normal");
+				}
+				else{
+					notification.setTitle("Failure : pay attention");
+					notification.setMessage("your command is failing ,pay attention to host");
+				}
+			}
+			
+			NotificationRestClient client=new NotificationRestClient();
+			client.sendNotificationToUser(notification);
+		}
 		CommandRunHistory history= new CommandRunHistory();
 		history.setCommandid(ch.getCommand().getId());
 		history.setCommandoutput(output);

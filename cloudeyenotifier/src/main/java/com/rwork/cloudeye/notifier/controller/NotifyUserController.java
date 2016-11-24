@@ -22,10 +22,10 @@ public class NotifyUserController {
 	
 	@RequestMapping(path="/notify/{type}",method=RequestMethod.POST)
 	public ResponseEntity<?> notify(@RequestBody UserNotification notification, @PathVariable String type){
-		if(notification.getUser()==null){
+		if(notification.getUsername()==null || notification.getChannel() == null){
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
-		System.out.println("Sending notification to user ="+ notification.getUser().getUsername());
+		System.out.println("Sending notification to user ="+ notification.getUsername());
 		System.out.println("notification type is "+ type);
 		messageSender.sendMessage(type, notification);
 		return new ResponseEntity(HttpStatus.ACCEPTED);

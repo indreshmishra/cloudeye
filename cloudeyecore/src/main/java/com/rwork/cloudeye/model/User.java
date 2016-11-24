@@ -40,9 +40,24 @@ public class User {
 	@ManyToOne(cascade=CascadeType.MERGE)
 	private Tenant tenant;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
 	private Contact contact;
 	
+	@OneToOne(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	private UserLicense userLicense;
+	
+	public Contact getContact() {
+		return contact;
+	}
+	public void setContact(Contact contact) {
+		this.contact = contact;
+	}
+	public UserLicense getUserLicense() {
+		return userLicense;
+	}
+	public void setUserLicense(UserLicense userLicense) {
+		this.userLicense = userLicense;
+	}
 	public long getId() {
 		return id;
 	}

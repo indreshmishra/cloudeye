@@ -30,7 +30,6 @@ public class CommandController {
 	private UserDao userDao;
 	
 	@RequestMapping("/command")
-	@Secured({"USER"})
 	public List<?> getCommands()
 	{
 		List<?> list= commandDao.getAll();

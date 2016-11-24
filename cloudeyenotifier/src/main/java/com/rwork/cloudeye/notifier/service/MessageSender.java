@@ -1,6 +1,8 @@
 package com.rwork.cloudeye.notifier.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.TimeoutException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,17 @@ import org.springframework.stereotype.Component;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.MessageProperties;
 import com.rwork.cloudeye.model.UserNotification;
-
+import com.rwork.cloudeye.util.BytesUtil;
+/***
+ * type of notification could be "user" , "system" etc.
+ * type of channel could be "email" , "sms" , "slack", "elk" etc.
+ * 
+ * so we use type of notification as exchange and type of channel as routing key
+ * @author indresh.mishra
+ *
+ */
 @Component
 public class MessageSender {
 	
@@ -36,17 +47,32 @@ public class MessageSender {
 			return false;
 		}
 		
+		String EXCHANGE_NAME = type;
+		String routing_key = notification.getChannel();
 		try {
-			channel.queueDeclare(type, false, false, false, null);
-		} catch (IOException e) {
+			channel.exchangeDeclare(EXCHANGE_NAME, "direct");
+		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("failed to create the desired queue");
+			e1.printStackTrace();
+			System.out.println("Error while declaring exchange");
 			return false;
 		}
+		/**
+		 * we don't declare queue now at sender end.
+		 */
+//		try {
+//			boolean durable =true;
+//			channel.queueDeclare(type, durable, false, false, null);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			System.out.println("failed to create the desired queue");
+//			return false;
+//		}
 		
 		try {
-			channel.basicPublish("", type, null, notification.getMessage().getBytes());
+			channel.basicPublish(EXCHANGE_NAME, routing_key, 
+					MessageProperties.PERSISTENT_TEXT_PLAIN,BytesUtil.toByteArray(notification));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,6 +108,8 @@ public class MessageSender {
 		com.rabbitmq.client.Channel channel = connection.createChannel();
 		return channel;
 	}
+	
+	
 	
 
 }

@@ -31,6 +31,9 @@ dependencies {
     
 	 compile group: 'com.rabbitmq', name: 'amqp-client', version: '3.6.5'
      
+     
+	compile group: 'javax.mail', name: 'mail', version: '1.4'
+     
     
 	  compile("javax.el:javax.el-api:2.2.4")
 }

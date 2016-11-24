@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,8 +24,17 @@ public class Host {
 	@ManyToOne
 	private User owner;
 //	private Tenant tenant;
+	
+	@OneToOne
+	private HostInfo hostInfo;
 //	
 	
+	public HostInfo getHostInfo() {
+		return hostInfo;
+	}
+	public void setHostInfo(HostInfo hostInfo) {
+		this.hostInfo = hostInfo;
+	}
 	public long getId() {
 		return id;
 	}

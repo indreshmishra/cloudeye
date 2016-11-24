@@ -31,6 +31,8 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-test")
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
      compile group: 'com.jcraft', name: 'jsch', version: '0.1.54'
+      compile("com.sun.jersey:jersey-client:1.8")
+    compile("com.google.code.gson:gson:2.8.0")
 }
 
 test {
