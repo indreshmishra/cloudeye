@@ -4,21 +4,29 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+        classpath("se.transmode.gradle:gradle-docker:1.2")
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
+apply plugin: 'docker'
 
 sourceCompatibility = 1.8
 version = '1.0'
+
 jar {
 	baseName="cloudeyereporter"
     manifest {
         attributes 'Implementation-Title': 'CloudEye',
-                   'Implementation-Version': version
+                   'Implementation-Version': version,
+                   'Main-Class': 'com.rwork.cloudeye.reporter.RunCloudEyeReporter'
     }
+    doFirst {
+        from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
 }
 
 repositories {
@@ -37,6 +45,8 @@ dependencies {
      compile("org.springframework.boot:spring-boot-starter-data-mongodb")
 	  compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 	  compile("javax.el:javax.el-api:2.2.4")
+	  compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+	 compile 'org.codehaus.groovy:groovy-all'
 }
 
 test {
@@ -50,3 +60,16 @@ uploadArchives {
        }
     }
 }
+task buildDocker(type: Docker) {
+  baseImage = 'develar/java:latest'
+  push = project.hasProperty('push')
+  tag = 'rworkdroplate/cloudeyereporter'
+  addFile {
+    from jar
+    rename {'app.jar'}
+  }
+  entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-jar', '/app.jar'])
+  exposePort(8090)
+}
+
+buildDocker.dependsOn(build)

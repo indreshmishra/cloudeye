@@ -4,21 +4,29 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+        classpath "se.transmode.gradle:gradle-docker:1.2" 
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
+apply plugin: 'docker'
 
 sourceCompatibility = 1.8
 version = '1.0'
+
 jar {
 	baseName="cloudeyeservices"
     manifest {
         attributes 'Implementation-Title': 'CloudEye',
-                   'Implementation-Version': version
+                   'Implementation-Version': version,
+                   'Main-Class':'com.rwork.cloudeye.RunCloudEye'
     }
+    doFirst {
+        from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
 }
 
 repositories {
@@ -45,6 +53,8 @@ dependencies {
      compile 'org.springframework.security.oauth:spring-security-oauth2'
     
 	 compile group: 'com.jcraft', name: 'jsch', version: '0.1.54'
+	 compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+	 compile 'org.codehaus.groovy:groovy-all'
 	 
 }
 
@@ -59,3 +69,17 @@ uploadArchives {
        }
     }
 }
+
+task buildDocker(type: Docker) {
+  baseImage = 'develar/java:latest'
+  push = project.hasProperty('push')
+  tag = 'rworkdroplate/cloudeyeservice'
+  addFile {
+    from jar
+    rename {'app.jar'}
+  }
+  entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-jar', '/app.jar'])
+  exposePort(8080)
+}
+
+buildDocker.dependsOn(build)
