@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+        classpath("se.transmode.gradle:gradle-docker:1.2")
     }
 }
 
@@ -11,10 +12,22 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: 'docker'
+
+version = '1.0'
+
 
 jar {
     baseName = 'cloudeye-jobs'
-    version =  '0.1.0'
+     manifest {
+        attributes 'Implementation-Title': 'CloudEye',
+                   'Implementation-Version': '1.0',
+                   'Main-Class':'com.rwork.cloudeye.jobs.JobsRunApplication'
+    }
+    doFirst {
+        from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
 }
 
 repositories {
@@ -31,7 +44,8 @@ dependencies {
     
     testCompile("org.springframework.boot:spring-boot-starter-test")
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
-    
+    compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+	 compile 'org.codehaus.groovy:groovy-all'
 }
 
 test {
@@ -43,14 +57,7 @@ sourceSets {
     main.resources.srcDir "src/main/resources"
 }
 
-jar {
-  manifest {
-    attributes(
-      'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-      'Main-Class': 'com.rwork.cloudeye.jobs.JobsRunApplication'
-    )
-  }
-}
+
 
 uploadArchives {
     repositories {
@@ -59,4 +66,18 @@ uploadArchives {
        }
     }
 }
+
+task buildDocker(type: Docker) {
+  baseImage = 'develar/java:latest'
+  push = project.hasProperty('push')
+  tag = 'rworkdroplate/cloudeyejobs'
+  addFile {
+    from jar
+    rename {'app.jar'}
+  }
+  entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-jar', '/app.jar'])
+  
+}
+
+buildDocker.dependsOn(build)
 

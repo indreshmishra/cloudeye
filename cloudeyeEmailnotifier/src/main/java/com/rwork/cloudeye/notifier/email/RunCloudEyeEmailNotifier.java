@@ -8,6 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +17,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
 import com.rabbitmq.client.AMQP;
@@ -38,9 +41,17 @@ import com.rwork.cloudeye.util.BytesUtil;
 public class RunCloudEyeEmailNotifier implements CommandLineRunner{
 
 	
+	
 	@Autowired
 	private Environment env;
 	
+	
+	private static Environment env_static;
+	
+	@PostConstruct
+	public void initStaticEnv(){
+		env_static= this.env;
+	}
 	
 	private static String USER_ROUTING_KEY= "email";
 	
@@ -52,19 +63,8 @@ public class RunCloudEyeEmailNotifier implements CommandLineRunner{
 	
 	public static Properties emailProps=new Properties();
 	
-	public static void main(String[] args){
-		System.out.println("Running Cloud Eye Email Notifier");
-		
-		
-		SpringApplication.run(RunCloudEyeEmailNotifier.class, args);
-	}
-	/***
-	 * later on ,we can have three threads running ,one for user type, one for system ,one for others type of notification
-	 */
-	@Override
-	public void run(String... args) throws Exception {
-		
-		boolean askinput= Boolean.parseBoolean(env.getProperty("email.option.server.askinput"));
+	public  void setSMTPDetails(){
+		boolean askinput= Boolean.parseBoolean(env_static.getProperty("email.option.server.askinput"));
 		
 		if(askinput==true){
 			Scanner scanner=new Scanner(System.in);
@@ -84,16 +84,33 @@ public class RunCloudEyeEmailNotifier implements CommandLineRunner{
 			emailProps.put("mail.smtp.password", password);
 		}
 		else{
-			String provider = env.getProperty("email.option.use.provider");
+			String provider = env_static.getProperty("email.option.use.provider");
 			emailProps.put("mail.smtp.auth", "true");
 			emailProps.put("mail.smtp.starttls.enable", "true");
-			emailProps.put("mail.smtp.host", env.getProperty("email."+provider+".smtp.server"));
-			emailProps.put("mail.smtp.port", env.getProperty("email."+provider+".smtp.port"));
-			emailProps.put("mail.smtp.user", env.getProperty("email."+provider+".username"));
-			emailProps.put("mail.smtp.password", env.getProperty("email."+provider+".password"));
+			emailProps.put("mail.smtp.host", env_static.getProperty("email."+provider+".smtp.server"));
+			emailProps.put("mail.smtp.port", env_static.getProperty("email."+provider+".smtp.port"));
+			emailProps.put("mail.smtp.user", env_static.getProperty("email."+provider+".username"));
+			emailProps.put("mail.smtp.password", env_static.getProperty("email."+provider+".password"));
 			
 		}
-				
+	}
+	
+	public static void main(String[] args){
+		System.out.println("Running Cloud Eye Email Notifier");
+		
+		
+		SpringApplication.run(RunCloudEyeEmailNotifier.class, args);
+		
+		
+	}
+	/***
+	 * later on ,we can have three threads running ,one for user type, one for system ,one for others type of notification
+	 */
+	@Override
+	public void run(String... args) throws Exception {
+		
+		
+		setSMTPDetails();		
 				
 						
 		ThreadPoolExecutor receiverexecutor=(ThreadPoolExecutor)Executors.newCachedThreadPool();

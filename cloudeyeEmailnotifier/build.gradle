@@ -4,12 +4,14 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+        classpath("se.transmode.gradle:gradle-docker:1.2")
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
+apply plugin: 'docker'
 
 sourceCompatibility = 1.8
 version = '1.0'
@@ -17,8 +19,13 @@ jar {
 	baseName="cloudeyeEmailnotifier"
     manifest {
         attributes 'Implementation-Title': 'CloudEye',
-                   'Implementation-Version': version
+                   'Implementation-Version': '1.0',
+                   'Main-Class':'com.rwork.cloudeye.notifier.email.RunCloudEyeEmailNotifier'
     }
+    doFirst {
+        from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
 }
 
 repositories {
@@ -36,6 +43,8 @@ dependencies {
      
     
 	  compile("javax.el:javax.el-api:2.2.4")
+	  compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+	 compile 'org.codehaus.groovy:groovy-all'
 }
 
 test {
@@ -49,3 +58,17 @@ uploadArchives {
        }
     }
 }
+
+task buildDocker(type: Docker) {
+  baseImage = 'develar/java:latest'
+  push = project.hasProperty('push')
+  tag = 'rworkdroplate/cloudeyeemailnotifier'
+  addFile {
+    from jar
+    rename {'app.jar'}
+  }
+  entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-jar', '/app.jar'])
+  exposePort(9092)
+}
+
+buildDocker.dependsOn(build)
