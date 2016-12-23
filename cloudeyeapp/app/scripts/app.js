@@ -18,6 +18,9 @@ angular
     'ngTouch',
     'ui.bootstrap'
   ])
+  .service('ConfigService',function(){
+    this.config={serviceurl:'http://192.168.99.100:8080/', reporterurl:'http://192.168.99.100:8090/'};
+  })
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -61,8 +64,8 @@ angular
         redirectTo: '/'
       });
   })
-  .factory('AuthenticationService',['Base64','$http','$cookieStore','$rootScope',
-      function(Base64,$http,$cookieStore,$rootScope){
+  .factory('AuthenticationService',['Base64','$http','$cookieStore','$rootScope','ConfigService',
+      function(Base64,$http,$cookieStore,$rootScope, ConfigService){
         var service={};
         service.setCredentials=function(username,password){
               var authdata=Base64.encode(username+':'+password);
@@ -99,7 +102,7 @@ angular
 
              $http({
               method:'POST',
-              url: 'http://localhost:8080/auth/check',
+              url: ConfigService.config.serviceurl+'auth/check',
               data:{username:username,password:password},
               headers:{
                 'Authorization': 'Basic '+authdata,

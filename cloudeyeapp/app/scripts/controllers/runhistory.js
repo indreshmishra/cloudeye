@@ -2,10 +2,10 @@
 
 
 angular.module('cloudeyeappApp')
- .controller('RunHistoryCtrl', function($scope, $http, $cookieStore){
+ .controller('RunHistoryCtrl', function($scope, $http, $cookieStore, ConfigService){
  console.log('loading runhistory controller');
 
-    $http.get('http://localhost:8090/runhistory')
+    $http.get(ConfigService.config.reporterurl+'runhistory')
       .success(function(response){
         $scope.records= response;
       });

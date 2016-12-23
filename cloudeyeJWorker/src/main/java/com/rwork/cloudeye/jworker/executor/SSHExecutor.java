@@ -9,12 +9,13 @@ import org.springframework.stereotype.Component;
 
 import com.rwork.cloudeye.jworker.dao.CommandHostDao;
 import com.rwork.cloudeye.jworker.dao.CommandRunHistoryRepository;
+import com.rwork.cloudeye.jworker.restclient.NotificationRestClient;
 import com.rwork.cloudeye.model.CommandRunHistory;
 import com.rwork.cloudeye.jworker.runner.SSHRunner;
 import com.rwork.cloudeye.model.CommandHost;
 import com.rwork.cloudeye.model.CommandStatus;
 import com.rwork.cloudeye.model.UserNotification;
-import com.rwork.cloudeye.restclient.NotificationRestClient;
+
 
 @Component
 public class SSHExecutor {
@@ -30,6 +31,9 @@ public class SSHExecutor {
 	
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private NotificationRestClient  restclient;
 	
 	
 	//TODO ,its giving error ,
@@ -98,8 +102,8 @@ public class SSHExecutor {
 				}
 			}
 			
-			NotificationRestClient client=new NotificationRestClient();
-			client.sendNotificationToUser(notification);
+			
+			restclient.sendNotificationToUser(notification);
 		}
 		CommandRunHistory history= new CommandRunHistory();
 		history.setCommandid(ch.getCommand().getId());

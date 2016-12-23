@@ -64,18 +64,23 @@ public class RunCloudEyeEmailNotifier implements CommandLineRunner{
 	public static Properties emailProps=new Properties();
 	
 	public  void setSMTPDetails(){
+		System.out.println("=====["+env_static.getProperty("email.option.server.askinput")+"]=======");
 		boolean askinput= Boolean.parseBoolean(env_static.getProperty("email.option.server.askinput"));
 		
 		if(askinput==true){
-			Scanner scanner=new Scanner(System.in);
-			System.out.println("Enter smtp server address");
-			String server= scanner.next();
-			System.out.println("Enter smtp port");
-			String port= scanner.next();
-			System.out.println("Enter smtp username");
-			String username=scanner.next();
-			System.out.println("Enter smtp user password");
-			String password= System.console().readPassword().toString();
+			//Scanner scanner=new Scanner(System.in);
+			//System.out.println("Enter smtp server address");
+			//String server= scanner.next();
+			String server = System.getenv("mail.smtp.host");
+			System.out.println("*********server is "+ server);
+			//String port= scanner.next();
+			String port= System.getenv("mail.smtp.port");
+			//System.out.println("Enter smtp username");
+			//String username=scanner.next();
+			String username=System.getenv("mail.smtp.user");
+			//System.out.println("Enter smtp user password");
+			//String password= System.console().readPassword().toString();
+			String password=System.getenv("mail.smtp.password");
 			emailProps.put("mail.smtp.auth", "true");
 			emailProps.put("mail.smtp.starttls.enable", "true");
 			emailProps.put("mail.smtp.host", server);
@@ -84,6 +89,7 @@ public class RunCloudEyeEmailNotifier implements CommandLineRunner{
 			emailProps.put("mail.smtp.password", password);
 		}
 		else{
+			System.out.println("=================input from property file===========");
 			String provider = env_static.getProperty("email.option.use.provider");
 			emailProps.put("mail.smtp.auth", "true");
 			emailProps.put("mail.smtp.starttls.enable", "true");

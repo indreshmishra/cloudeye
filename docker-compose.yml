@@ -1,0 +1,29 @@
+version: '2'
+services:
+  cloudeyeservice:
+     image: rworkdroplate/cloudeyeservice:1.0
+     ports:
+      - "8080:8080"
+
+  cloudeyejobs:
+     image: rworkdroplate/cloudeyejobs:1.0
+
+  cloudeyejworker:
+     image: rworkdroplate/cloudeyejworker:1.0
+
+  cloudeyereporter:
+     image: rworkdroplate/cloudeyereporter:1.0
+     ports:
+      - "8090:8090"
+  cloudeyenotifier:
+     image: rworkdroplate/cloudeyenotifier:1.0
+     ports:
+      - "9092:9092"
+  cloudeyeemailnotifier:
+     image: rworkdroplate/cloudeyeemailnotifier:1.0
+     environment:
+      - mail.smtp.host=10.80.120.100
+      - mail.smtp.port=25
+      - mail.smtp.user=atlas.build
+      - mail.smtp.password=L3uild1ng!
+
