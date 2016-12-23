@@ -1,5 +1,10 @@
 version: '2'
 services:
+  cloudeyerabbitmq:
+     image: rabbitmq
+     ports:
+      - "32770:5672"
+
   cloudeyeservice:
      image: rworkdroplate/cloudeyeservice:1.0
      ports:
@@ -19,6 +24,9 @@ services:
      image: rworkdroplate/cloudeyenotifier:1.0
      ports:
       - "9092:9092"
+     depends_on:
+      - cloudeyerabbitmq
+
   cloudeyeemailnotifier:
      image: rworkdroplate/cloudeyeemailnotifier:1.0
      environment:
@@ -26,4 +34,5 @@ services:
       - mail.smtp.port=25
       - mail.smtp.user=atlas.build
       - mail.smtp.password=L3uild1ng!
-
+     depends_on:
+      - cloudeyerabbitmq
