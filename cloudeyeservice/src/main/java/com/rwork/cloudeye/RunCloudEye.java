@@ -3,6 +3,8 @@ package com.rwork.cloudeye;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,23 +34,94 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.rwork.cloudeye.dao.RoleDao;
+import com.rwork.cloudeye.dao.TenantDao;
 import com.rwork.cloudeye.dao.UserDao;
 import com.rwork.cloudeye.filter.TestFilter;
 import com.rwork.cloudeye.interceptors.CountTimeInterceptor;
+import com.rwork.cloudeye.model.Contact;
 import com.rwork.cloudeye.model.Role;
+import com.rwork.cloudeye.model.Tenant;
 import com.rwork.cloudeye.model.User;
 
 //@ComponentScan("com.rwork.cloudeye.model")
 @SpringBootApplication
 public class RunCloudEye {
 	
+	@Autowired
+	private UserDao userDao;
 	
+	@Autowired
+	private TenantDao tenantDao;
 	
+	@Autowired
+	private RoleDao roleDao;
+	
+	private static UserDao userdaos;
+	private static TenantDao tenantdaos;
+	private static RoleDao roledaos;
+	
+	@PostConstruct
+	public void setDaoStatic()
+	{
+		userdaos=this.userDao;
+		tenantdaos=this.tenantDao;
+		roledaos=this.roleDao;
+	}
 	
 	public static void main(String[] args)
 	{
 		System.out.println("Cloud Eye is Running");
 		ApplicationContext context= SpringApplication.run(RunCloudEye.class, args);
+		List<?> users= userdaos.getAll();
+		System.out.println("number of users in system "+users.size());
+		if(users.size()==0){
+			System.out.println("Bootstrapping Tenant , User, Role");
+			/*
+			 * bootstrap admin user
+			 */
+			
+			Role adminrole =new Role();
+			adminrole.setName("ADMIN");
+			roledaos.createRole(adminrole);
+			
+			Role userrole=new Role();
+			userrole.setName("USER");
+			roledaos.createRole(userrole);
+			
+			List<?> roles= roledaos.getAll();
+			Role adminrolecreated=null;
+			for(Object r: roles){
+				Role role=(Role)r;
+				if("ADMIN".equals(role.getName())){
+					adminrolecreated=role;
+					break;
+				}
+			}
+			
+			Tenant tenant=new Tenant();
+			tenant.setName("Admin");
+			tenantdaos.createTenant(tenant);
+			Tenant createdtenant= tenantdaos.getTenantByName("Admin");
+			
+			User adminuser=new User();
+			adminuser.setName("admin");
+			adminuser.setPassword("admin");
+			adminuser.setEnabled(true);
+			adminuser.setUsername("admin");
+			adminuser.setCanNotbeDeletedEver(true);
+			adminuser.setLocked(false);
+			
+			Contact contact=new Contact();
+			contact.setEmailId(System.getenv("bootstrap.admin.emailid"));
+			adminuser.setContact(contact);
+			adminuser.setTenant(createdtenant);
+			List<Role> roles2=new ArrayList<>();
+			roles2.add(adminrolecreated);
+			adminuser.setRoles(roles2);
+			
+			userdaos.createUser(adminuser);
+		}
 	}
 
 }

@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import com.rwork.cloudeye.model.Tenant;
+import com.rwork.cloudeye.model.User;
 
 @Repository
 @Transactional
@@ -35,5 +36,16 @@ public class TenantDao {
 	
 	public List<?> getAll(){
 		return em.createQuery("from Tenant").getResultList();
+	}
+	public Tenant getTenantByName(String name){
+		Tenant tenant= null;
+		try{
+			tenant= (Tenant) em.createQuery("from Tenant where name = ?1").setParameter(1, name).getSingleResult();
+		}
+		catch(Exception e){
+			
+		}
+		
+		return tenant;
 	}
 }
