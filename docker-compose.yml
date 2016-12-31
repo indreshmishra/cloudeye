@@ -1,0 +1,64 @@
+version: '2'
+services:
+  cloudeyemysql:
+     image: mysql
+     ports:
+      - "3306:3306"
+     environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=cloudeye
+      - MYSQL_USER=cloud
+      - MYSQL_PASSWORD=cloud
+
+  cloudeyemongo:
+     image: mongo
+
+  cloudeyerabbitmq:
+     image: rabbitmq
+     ports:
+      - "32770:5672"
+
+  cloudeyeservice:
+     image: rworkdroplate/cloudeyeservice:1.0
+     ports:
+      - "8080:8080"
+     depends_on:
+      - cloudeyemysql
+
+  cloudeyejobs:
+     image: rworkdroplate/cloudeyejobs:1.0
+     depends_on:
+      - cloudeyemysql
+      - cloudeyemongo
+
+  cloudeyejworker:
+     image: rworkdroplate/cloudeyejworker:1.0
+     depends_on:
+      - cloudeyemysql
+      - cloudeyemongo
+
+  cloudeyereporter:
+     image: rworkdroplate/cloudeyereporter:1.0
+     ports:
+      - "8090:8090"
+     depends_on:
+      - cloudeyemysql
+      - cloudeyemongo
+
+
+  cloudeyenotifier:
+     image: rworkdroplate/cloudeyenotifier:1.0
+     ports:
+      - "9092:9092"
+     depends_on:
+      - cloudeyerabbitmq
+
+  cloudeyeemailnotifier:
+     image: rworkdroplate/cloudeyeemailnotifier:1.0
+     environment:
+      - mail.smtp.host=${SMTP_HOST}
+      - mail.smtp.port=${SMTP_PORT}
+      - mail.smtp.user=${SMTP_USER}
+      - mail.smtp.password=${SMTP_PASSWORD}
+     depends_on:
+      - cloudeyerabbitmq
