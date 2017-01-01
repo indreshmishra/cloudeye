@@ -16,3 +16,6 @@ cd ..
 cd cloudeyenotifier
 gradle buildDocker
 cd ..
+cd cloudeyeapp
+docker build -t rowkrdroplate/cloudeyeapp .
+cd ..

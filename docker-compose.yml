@@ -1,5 +1,9 @@
 version: '2'
 services:
+  cloudeyeapp:
+     image: rworkdroplate/cloudeyeapp:1.0
+     ports:
+      - "9000:9000"
   cloudeyemysql:
      image: mysql
      ports:
