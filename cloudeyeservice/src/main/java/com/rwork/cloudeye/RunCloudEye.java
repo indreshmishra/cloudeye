@@ -132,6 +132,8 @@ class WebConfig extends WebMvcConfigurerAdapter{
 	
 	public void addCorsMappings(CorsRegistry registry){
 		registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*");
+		
+		
 	}
 	
 	@Autowired
@@ -142,12 +144,12 @@ class WebConfig extends WebMvcConfigurerAdapter{
 	}
 	
 	
-	@Bean
-	public FilterRegistrationBean myTestFilter(){
-		FilterRegistrationBean bean=new FilterRegistrationBean(new TestFilter());
-		bean.addUrlPatterns("/command/");
-		return bean;
-	}
+//	@Bean
+//	public FilterRegistrationBean myTestFilter(){
+//		FilterRegistrationBean bean=new FilterRegistrationBean(new TestFilter());
+//		//bean.addUrlPatterns("/command/");
+//		return bean;
+//	}
 }
 
 @Configuration
@@ -226,9 +228,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		.antMatchers("/auth/check").hasAnyAuthority("USER","ADMIN")
 		.antMatchers("/command/**").hasAnyAuthority("USER","ADMIN")
 		.antMatchers("/command/**/host/**").hasAnyAuthority("USER","ADMIN")
-		.antMatchers("/host/**").hasAnyAuthority("USER")
-		.antMatchers("/commandhost/**").hasAnyAuthority("USER")
-		.antMatchers("/commandhost/**/**").hasAnyAuthority("USER")
+		.antMatchers("/host/**").hasAnyAuthority("USER","ADMIN")
+		.antMatchers("/commandhost/**").hasAnyAuthority("USER","ADMIN")
+		.antMatchers("/commandhost/**/**").hasAnyAuthority("USER","ADMIN")
 		.antMatchers("/tenant/**").hasAuthority("ADMIN")
 		.antMatchers("/user/**").hasAuthority("ADMIN")
 		.antMatchers("/role/**").hasAuthority("ADMIN")

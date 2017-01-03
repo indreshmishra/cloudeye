@@ -17,5 +17,8 @@ cd cloudeyenotifier
 gradle buildDocker
 cd ..
 cd cloudeyeapp
-docker build -t rowkrdroplate/cloudeyeapp .
+docker build -t rworkdroplate/cloudeyeapp:1.0 .
+cd ..
+cd cloudeyeJWorkerBaseImage
+docker build -t rworkdroplate/rwork-java-ssh .
 cd ..

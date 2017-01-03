@@ -29,6 +29,7 @@ public class CommandController {
 	@Autowired
 	private UserDao userDao;
 	
+	//@CrossOrigin
 	@RequestMapping("/command")
 	public List<?> getCommands()
 	{

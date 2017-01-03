@@ -20,8 +20,8 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
-@Configuration
-@EnableResourceServer
+//@Configuration
+//@EnableResourceServer
 public class OAuth2ResourceServerConfig  extends ResourceServerConfigurerAdapter{
 	
 	@Autowired
@@ -75,8 +75,9 @@ public class OAuth2ResourceServerConfig  extends ResourceServerConfigurerAdapter
 		http.csrf().disable()
 		.authorizeRequests()
 		.antMatchers("/auth/check").hasAnyAuthority("USER","ADMIN")
-		.antMatchers("/command/**").hasAuthority("USER")
-		.antMatchers("/command/**/host/**").hasAuthority("USER")
+		.antMatchers("/command/**").hasAnyAuthority("USER","ADMIN")
+		.antMatchers("/command/**/host/**").hasAnyAuthority("USER","ADMIN")
+		
 		.antMatchers("/tenant/**").hasAuthority("ADMIN")
 		.antMatchers("/user/**").hasAuthority("ADMIN")
 		.antMatchers("/role/**").hasAuthority("ADMIN")

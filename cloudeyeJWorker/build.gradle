@@ -69,7 +69,7 @@ uploadArchives {
     }
 }
 task buildDocker(type: Docker) {
-  baseImage = 'develar/java:latest'
+  baseImage = 'rworkdroplate/rwork-java-ssh:latest'
   push = project.hasProperty('push')
   tag = 'rworkdroplate/cloudeyejworker'
   addFile {
