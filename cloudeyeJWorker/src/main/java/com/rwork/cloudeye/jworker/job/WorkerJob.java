@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.rwork.cloudeye.jworker.dao.CommandHostDao;
 import com.rwork.cloudeye.jworker.dao.WorkerNodeDao;
-import com.rwork.cloudeye.jworker.executor.SSHExecutor;
+import com.rwork.cloudeye.jworker.executor.CommandExecutor;
 import com.rwork.cloudeye.model.CommandHost;
 import com.rwork.cloudeye.model.WorkerNode;
 
@@ -24,7 +24,7 @@ public class WorkerJob {
 	private WorkerNodeDao workernodeDao;
 	
 	@Autowired
-	private SSHExecutor sshexecutor;
+	private CommandExecutor commandexecutor;
 
 	public void pickupCommandHosts(String workerid, ThreadPoolExecutor jobexecutor){
 		System.out.println("Picking up All queued command host");
@@ -39,7 +39,7 @@ public class WorkerJob {
 				
 				@Override
 				public void run() {
-					sshexecutor.execute(ch);
+					commandexecutor.execute(ch);
 					
 				}
 			});

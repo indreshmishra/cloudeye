@@ -7,6 +7,7 @@
       <th>Id</th>
       <th>Name</th>
       <th>Command</th>
+      <th>Type</th>
       <th>Output Should Contain</th>
       <th>Last Run Date</th>
       <th>Actions</th>
@@ -16,6 +17,7 @@
       <td>{{command.id}}</td>
       <td>{{ command.name }}</td>
       <td>{{ command.commandstring }}</td>
+      <td>{{ command.commandType }}</td>
       <td>{{ command.containString }}</td>
       <td> {{command.lastRunDate }}</td>
       <td> <span class="glyphicon glyphicon-remove" ng-click="delete(command.id)"></td>
@@ -30,8 +32,16 @@
       <input type="text" class="form-control" placeholder="Command Name" ng-model="command.name"/>
     </div>
     <div class="form-group">
+      <label>Type</label>
+
+      <select ng-model="command.commandType">
+        <option  ng-repeat="type in commandtypes" value="{{type}}">{{type}}</option>
+      </select>
+    </div>
+    <div class="form-group">
       <input type="text" class="form-control" placeholder="Command" ng-model="command.commandstring"/>
     </div>
+
     <div class="form-group">
       <input type="text" class="form-control" placeholder="Result should Contain" ng-model="command.containString"/>
     </div>

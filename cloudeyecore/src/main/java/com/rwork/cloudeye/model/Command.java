@@ -29,6 +29,7 @@ public class Command {
 	private User owner;
 	//private Tenant tenant;
 	
+	private CommandType commandType;
 	
 	public long getId() {
 		return id;
@@ -81,6 +82,8 @@ public class Command {
 //		this.tenant = tenant;
 //	}
 	
+	
+	
 	public static Command dummy()
 	{
 		Command c=new Command();
@@ -90,6 +93,12 @@ public class Command {
 		//c.setOwner(User.dummy());
 		
 		return c;
+	}
+	public CommandType getCommandType() {
+		return commandType;
+	}
+	public void setCommandType(CommandType commandType) {
+		this.commandType = commandType;
 	}
 	
 }

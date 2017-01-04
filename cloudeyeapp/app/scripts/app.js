@@ -19,7 +19,7 @@ angular
     'ui.bootstrap'
   ])
   .service('ConfigService',function(){
-    this.config={serviceurl:'http://cloudeye:8080/', reporterurl:'http://cloudeye:8090/'};
+    this.config={serviceurl:'http://localhost:8080/', reporterurl:'http://localhost:8090/'};
   })
   .config(function ($routeProvider) {
     $routeProvider

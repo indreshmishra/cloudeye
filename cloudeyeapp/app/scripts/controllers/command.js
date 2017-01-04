@@ -5,6 +5,8 @@ angular.module('cloudeyeappApp')
  .controller('CommandCtrl', function($scope, $http, $cookieStore, ConfigService){
  console.log('loading commandctrl');
 
+    $scope.commandtypes=["SSH","PING"];
+
     $http.get(ConfigService.config.serviceurl+'command/',{headers:{ 'Authorization': 'Basic '+$cookieStore.get('globals').currentUser.authdata}})
       .success(function(response){
         $scope.commands= response;

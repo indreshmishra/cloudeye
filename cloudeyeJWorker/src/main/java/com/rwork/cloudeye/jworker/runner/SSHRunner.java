@@ -12,27 +12,54 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.rwork.cloudeye.model.CommandHost;
+import com.rwork.cloudeye.model.CommandOutput;
 
 @Component
-public class SSHRunner {
-	public String runCommand(String hostip,String command, String user, String password) throws IOException{
+public class SSHRunner implements ICommandRunner {
+	public CommandOutput runCommand(CommandHost ch) throws IOException{
+		
+		
+		CommandOutput cout= runCommand(ch.getHost().getHostipaddress(), ch.getCommand().getCommandstring(), ch.getHost().getHostuser(), ch.getHost().getHostpassword());
+		
+		if(ch.getCommand().getContainString()!= null){
+			if(cout.getOutput().contains(ch.getCommand().getContainString())){
+				cout.setSuccess(true);
+			}
+		}
+		else{
+			cout.setSuccess(true); // as there is no expected output
+		}
+		
+		return cout;
+	}
+	
+	public CommandOutput runCommand(String hostip,String command, String user, String password) throws IOException{
+		CommandOutput cout=new CommandOutput();
+		cout.setSuccess(false);
+		
+		
 		JSch jsch=new JSch();
 		jsch.setConfig("StrictHostKeyChecking", "no");
 		
-		Session session;
+		Session session=null;
 		try {
 			session = jsch.getSession(user, hostip);
 			session.setPassword(password);
 		} catch (JSchException e) {
 			e.printStackTrace();
-			return "FAILED_TO_GET_SESSION";
+			 cout.setOutput("FAILED_TO_GET_SESSION");
+			 cout.setSuccess(false);
+			 return cout;
 			
 		}
 		try {
 			session.connect();
 		} catch (JSchException e) {
 			e.printStackTrace();
-			return "FAILED_TO_CONNECT";
+			 cout.setOutput( "FAILED_TO_CONNECT");
+			 cout.setSuccess(false);
+			 return cout;
 		}
 		Channel channel = null;
 		try {
@@ -40,7 +67,9 @@ public class SSHRunner {
 		} catch (JSchException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "FAILED_TO_OPEN_CHANNEL";
+			 cout.setOutput( "FAILED_TO_OPEN_CHANNEL");
+			 cout.setSuccess(false);
+			 return cout;
 		}
 		((ChannelExec)channel).setCommand(command);
 		InputStream in =null;
@@ -51,14 +80,18 @@ public class SSHRunner {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "FAILED_TO_GET_INPUTSTREAM";
+			 cout.setOutput( "FAILED_TO_GET_INPUTSTREAM");
+			 cout.setSuccess(false);
+			 return cout;
 		}
 		try {
 			channel.connect();
 		} catch (JSchException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "FAILED_TO_CONNECT";
+			 cout.setOutput( "FAILED_TO_CONNECT");
+			 cout.setSuccess(false);
+			 return cout;
 		}
 		StringBuffer sb=new StringBuffer();
 		while(bio.read() >0){
@@ -66,6 +99,8 @@ public class SSHRunner {
 		}
 		channel.disconnect();
 		session.disconnect();
-		return sb.toString();
+		 cout.setOutput( sb.toString());
+		 
+		 return cout;
 	}
 }

@@ -11,20 +11,23 @@ import com.rwork.cloudeye.jworker.dao.CommandHostDao;
 import com.rwork.cloudeye.jworker.dao.CommandRunHistoryRepository;
 import com.rwork.cloudeye.jworker.restclient.NotificationRestClient;
 import com.rwork.cloudeye.model.CommandRunHistory;
+import com.rwork.cloudeye.jworker.runner.RunnerFactory;
 import com.rwork.cloudeye.jworker.runner.SSHRunner;
 import com.rwork.cloudeye.model.CommandHost;
+import com.rwork.cloudeye.model.CommandOutput;
 import com.rwork.cloudeye.model.CommandStatus;
 import com.rwork.cloudeye.model.UserNotification;
 
 
 @Component
-public class SSHExecutor {
+public class CommandExecutor {
 	
 	@Autowired
 	private CommandHostDao commandhostDao;
 	
 	@Autowired
-	private SSHRunner sshrunner;
+	private RunnerFactory runnerFactory;
+	
 	
 	@Autowired
 	private CommandRunHistoryRepository commandrunHistoryRepo;
@@ -46,9 +49,13 @@ public class SSHExecutor {
 		int maxlength= Integer.parseInt(env.getProperty("command.output.maxlength"));
 		commandhostDao.updateCommandHost(ch);
 		Boolean earliersuccess= ch.getSuccess();
+		CommandOutput cout=new CommandOutput();
+		cout.setSuccess(false);
 		try {
 			System.out.println("============running command==========");
-			 output = sshrunner.runCommand(ch.getHost().getHostipaddress(), ch.getCommand().getCommandstring(), ch.getHost().getHostuser(), ch.getHost().getHostpassword());
+			
+			 cout = runnerFactory.getCommandRunner(ch.getCommand().getCommandType()).runCommand(ch);
+			 output=cout.getOutput();
 			 int m = (output.length() < maxlength)? output.length(): maxlength;
 			 String output2=output.substring(0,m);
 			 ch.setOutput(output2);
@@ -59,12 +66,10 @@ public class SSHExecutor {
 			ch.setSuccess(false);
 			ch.setOutput("exception");
 		}
-		if(output != null && output.contains("FAILED")){
-			ch.setSuccess(false);
-			ch.setOutput(output);
-		}
+		ch.setSuccess(cout.getSuccess());
 		
-		if(output!= null && output.contains(ch.getCommand().getContainString())){
+		
+		if(ch.getCommand().getContainString() != null){
 			int bindex= output.indexOf(ch.getCommand().getContainString());
 			int m = (output.length() < maxlength)? output.length(): maxlength;
 			if(output.length() > maxlength){
@@ -74,11 +79,9 @@ public class SSHExecutor {
 			else{
 				ch.setOutput(output);
 			}
-			ch.setSuccess(true);
+			ch.setSuccess(cout.getSuccess());
 		}
-		else{
-			ch.setSuccess(false);
-		}
+		
 		ch.setLastRun(new Date());
 		commandhostDao.updateCommandHost(ch);
 		
@@ -103,7 +106,12 @@ public class SSHExecutor {
 			}
 			
 			
-			restclient.sendNotificationToUser(notification);
+			try {
+				restclient.sendNotificationToUser(notification);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		CommandRunHistory history= new CommandRunHistory();
 		history.setCommandid(ch.getCommand().getId());

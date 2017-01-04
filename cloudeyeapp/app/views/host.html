@@ -8,6 +8,7 @@
             <th>Name</th>
             <th>Hostname</th>
             <th>Ipv4</th>
+            <th>URI</th>
             <th>Owner</th>
         </tr>
         </thead>
@@ -16,6 +17,7 @@
             <td>{{ host.name }}</td>
             <td>{{ host.hostname }}</td>
             <td>{{ host.hostipaddress }}</td>
+            <td>{{ host.hosturl }}</td>
             <td>{{ host.owner.username}}</td>
 
         </tr>
@@ -36,6 +38,9 @@
         </div>
         <div class="form-group">
             <input type="password" class="form-control" placeholder="host password" ng-model="host.hostpassword"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="host endpoint" ng-model="host.hosturl"/>
         </div>
 
         <button type="submit" class="btn btn-default" >Create</button>

@@ -20,6 +20,7 @@ public class Host {
 	private String hostipaddress;
 	private String hostuser;
 	private String hostpassword;
+	private String hosturl;
 	
 	@ManyToOne
 	private User owner;
@@ -83,6 +84,12 @@ public class Host {
 //	public void setTenant(Tenant tenant) {
 //		this.tenant = tenant;
 //	}
+	public String getHosturl() {
+		return hosturl;
+	}
+	public void setHosturl(String hosturl) {
+		this.hosturl = hosturl;
+	}
 	
 
 }

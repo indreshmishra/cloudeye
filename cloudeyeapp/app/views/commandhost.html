@@ -8,6 +8,7 @@
             <th>Host</th>
             <th>Hostname & IPv4</th>
             <th>Command</th>
+            <th>Type</th>
             <th>Output Should Contain</th>
             <th>Status</th>
             <th>Disabled</th>
@@ -24,6 +25,7 @@
             <td>{{ ch.host.name }}</td>
             <td>{{ ch.host.hostname }} , {{ch.host.hostipaddress}}</td>
             <td>{{ ch.command.commandstring }}</td>
+            <td>{{ ch.command.commandType }}</td>
             <td> {{ch.command.containString }}</td>
             <td> {{ch.commandStatus}} </td>
             <td>{{ch.disabled}}</td>

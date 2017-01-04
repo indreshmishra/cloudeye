@@ -17,7 +17,7 @@ public class NotificationRestClient {
 	@Autowired
 	private Environment env;
 	
-	public void sendNotificationToUser(UserNotification notification){
+	public void sendNotificationToUser(UserNotification notification) throws Exception{
 		Client client=new Client();
 		WebResource resource= client.resource(env.getProperty("cloudeye.notifier.endpoint")+"notify/user");
 		Gson gson=new Gson();
