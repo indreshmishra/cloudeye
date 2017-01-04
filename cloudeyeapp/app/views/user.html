@@ -23,13 +23,45 @@
           <li class="list-group-item" ng-repeat="role in user.roles">{{role.name}}</li>
         </ul>
       </td>
-      <td> <span class="glyphicon glyphicon-remove" ng-click="delete(user.id)"></td>
+      <td>
+
+        <span class="glyphicon glyphicon-remove" ng-click="delete(user.id)">
+          <span class="glyphicon glyphicon-edit" ng-click="edit(user)">
+
+      </td>
     </tr>
 
   </table>
 
 
 
+</div>
+
+<div class="container-fluid" ng-show="editable">
+  <form class="form-inline" ng-hide="false" ng-submit="saveediteduser()">
+      <input type="hidden" ng-model="euser.id"/>
+
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Name" ng-model="euser.name"/>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Username" ng-model="euser.username"/>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Email" ng-model="euser.contact.emailId"/>
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" placeholder="Password" ng-model="euser.password"/>
+    </div>
+    <div class="form-group">
+      <label>Never Be Deleted</label>
+      <input type="checkbox" class="form-control" placeholder="canNotbeDeletedEver" ng-model="euser.canNotbeDeletedEver"/>
+    </div>
+
+    <button type="submit" class="btn btn-default" >Save</button>
+  </form>
+
+  <p> {{ errormessage }}</p>
 </div>
 
 <div class="container-fluid">

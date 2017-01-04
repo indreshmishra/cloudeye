@@ -90,9 +90,26 @@ public class UserController {
 	}
 	
 	@RequestMapping(path="/user",method=RequestMethod.PUT)
-	public User updateUser(@RequestBody User user)
+	public ResponseEntity<?> updateUser(@RequestBody User user)
 	{
-		return userDao.updateUser(user);
+		User dbuser= userDao.getUser(user.getId());
+		dbuser.setCanNotbeDeletedEver(user.getCanNotbeDeletedEver());
+		dbuser.setName(user.getName());
+		dbuser.setPassword(user.getPassword());
+		dbuser.getContact().setEmailId(user.getContact().getEmailId());
+		if(!dbuser.getUsername().equals(user.getUsername())){
+			/*
+			 * if username is changed
+			 */
+			User au= userDao.getUserByName(user.getUsername());
+			if(au != null){
+				return new ResponseEntity(HttpStatus.FORBIDDEN);
+			}
+			dbuser.setUsername(user.getUsername());
+		}
+		
+		 userDao.updateUser(user);
+		 return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
 	
 	@RequestMapping(path="/user/{userid}/role/{roleid}", method=RequestMethod.PUT)

@@ -49,4 +49,22 @@ $http.get(ConfigService.config.serviceurl+'role',{headers:{ 'Authorization': 'Ba
                   });
 
     };
+    $scope.editable=false;
+    $scope.edit=function(user){
+        console.log('editing user with name '+ user.name);
+        $scope.editable=true;
+        $scope.euser=user;
+    };
+
+    $scope.saveediteduser=function(){
+      console.log('updating user with name '+$scope.euser.name);
+       $http.put(ConfigService.config.serviceurl+'user',$scope.euser ,{headers:{ 'Authorization': 'Basic '+$cookieStore.get('globals').currentUser.authdata}}).success(function(data,status){
+                          console.log('user with name '+$scope.user.name+'is created now');
+                          $http.get(ConfigService.config.serviceurl+'user/',{headers:{ 'Authorization': 'Basic '+$cookieStore.get('globals').currentUser.authdata}})
+                                .success(function(response){
+                                  $scope.users= response;
+                                });
+
+                        });
+    };
  });
