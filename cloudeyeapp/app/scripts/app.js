@@ -21,6 +21,11 @@ angular
   .service('ConfigService',function(){
     this.config={serviceurl:'http://localhost:8080/', reporterurl:'http://localhost:8090/'};
   })
+  .controller('HeaderCtlr', function($scope,$location){
+        $scope.isActive=function(viewlocation){
+           return viewlocation==$location.path();
+        };
+  })
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -31,7 +36,8 @@ angular
       .when('/about', {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl',
-        controllerAs: 'about'
+        controllerAs: 'about',
+        activetab: 'about'
       })
       .when('/user',{
        templateUrl: 'views/user.html',

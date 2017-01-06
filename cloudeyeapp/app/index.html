@@ -36,19 +36,23 @@
             <a class="navbar-brand" href="#/">cloudeyeapp</a>
           </div>
 
+
+
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
 
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#/">Home</a></li>
-              <li><a ng-href="#/about">About</a></li>
-              <li><a ng-href="#/user">User</a></li>
-              <li><a ng-href="#/tenant">Project</a></li>
-              <li><a ng-href="#/host">Host</a></li>
-              <li><a ng-href="#/command">Command</a></li>
-              <li><a ng-href="#/commandhost">Command-Host</a></li>
-              <li><a ng-href="#/commandhosthistory">Run-History</a></li>
-              <li><a ng-href="#/workernode">WorkerNode</a></li>
-              <li><a ng-href="#/">Contact</a></li>
+
+
+            <ul class="nav navbar-nav" ng-controller="HeaderCtlr">
+              <li ng-class="{active: isActive('/')}"><a href="#/">Home</a></li>
+              <li  ng-class="{active: isActive('/about')}"><a ng-href="#/about">About</a></li>
+              <li ng-class="{active: isActive('/user')}"><a ng-href="#/user">User</a></li>
+              <li ng-class="{active: isActive('/tenant')}"><a ng-href="#/tenant">Project</a></li>
+              <li ng-class="{active: isActive('/host')}"><a ng-href="#/host">Host</a></li>
+              <li ng-class="{active: isActive('/command')}"><a ng-href="#/command">Command</a></li>
+              <li ng-class="{active: isActive('/commandhost')}"><a ng-href="#/commandhost">Command-Host</a></li>
+              <li ng-class="{active: isActive('/commandhosthistory')}"><a ng-href="#/commandhosthistory">Run-History</a></li>
+              <li ng-class="{active: isActive('/workernode')}"><a ng-href="#/workernode">WorkerNode</a></li>
+              <li ng-class="{active: isActive('/contact')}"><a ng-href="#/contact">Contact</a></li>
             </ul>
           </div>
         </div>
