@@ -56,9 +56,12 @@ public class CommandExecutor {
 			
 			 cout = runnerFactory.getCommandRunner(ch.getCommand().getCommandType()).runCommand(ch);
 			 output=cout.getOutput();
-			 int m = (output.length() < maxlength)? output.length(): maxlength;
-			 String output2=output.substring(0,m);
-			 ch.setOutput(output2);
+			 if(output!= null){
+				 int m = (output.length() < maxlength)? output.length(): maxlength;
+				 String output2=output.substring(0,m);
+				 ch.setOutput(output2);
+			 }
+			 
 			 System.out.println("***********running command over************");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

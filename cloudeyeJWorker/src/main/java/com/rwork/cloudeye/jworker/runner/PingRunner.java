@@ -34,6 +34,7 @@ public class PingRunner implements ICommandRunner{
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				coutput.setOutput("FAILED : unknow host "+ip);
 			}
 		}
 		else if(uri != null){
@@ -42,6 +43,7 @@ public class PingRunner implements ICommandRunner{
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				coutput.setOutput("FAILED : unknow host "+uri);
 			}
 		}
 		
@@ -55,6 +57,7 @@ public class PingRunner implements ICommandRunner{
 			} catch (NumberFormatException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				coutput.setOutput("FAILED : failed to connect to host");
 			}
 		}
 		
