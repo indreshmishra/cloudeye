@@ -1,11 +1,5 @@
-*/.editorconfig
-**/.gitattributes
-**/.idea/**
-**/*.class
-**/*.classpath
-**/*.setting*
-**/bin/**
-**/.gradle/**
-**/.project
-**/bower_components/**
-**/node_modules/**
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
